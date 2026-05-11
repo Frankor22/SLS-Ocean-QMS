@@ -17,8 +17,9 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13px;}
+/* FIX 11: ensure scroll works on all pages */
 .app{display:flex;height:100vh;overflow:hidden;}
-.sidebar{width:200px;min-width:200px;background:var(--sb);display:flex;flex-direction:column;flex-shrink:0;}
+.sidebar{width:200px;min-width:200px;background:var(--sb);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
 .logo-area{padding:1.1rem 1.25rem;border-bottom:0.5px solid rgba(255,255,255,0.08);}
 .logo-name{font-size:13px;font-weight:500;color:#fff;letter-spacing:0.03em;}
 .logo-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bg-mid);margin-right:6px;}
@@ -29,11 +30,13 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .nav-item.active{color:#6DD063;border-left-color:var(--bg-mid);background:rgba(74,155,63,0.18);}
 .nav-badge{margin-left:auto;font-size:10px;border-radius:10px;padding:1px 6px;}
 .nb-red{background:var(--br);color:#fff;}.nb-amber{background:var(--ba);color:#fff;}
-.main{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
 .topbar{background:var(--white);border-bottom:0.5px solid var(--bbd);padding:0.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .page-title{font-size:14px;font-weight:500;color:var(--bn);}
 .page-sub{font-size:11px;color:var(--bt-muted);margin-top:1px;}
-.content{padding:1rem 1.25rem;flex:1;overflow-y:auto;}
+/* FIX 11: content always scrollable */
+.content{padding:1rem 1.25rem;flex:1;overflow-y:auto;overflow-x:hidden;}
+.page-wrap{display:flex;flex-direction:column;height:100%;overflow:hidden;}
 .btn{font-size:11.5px;padding:5px 12px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt-mid);cursor:pointer;font-family:var(--font);transition:all 0.12s;}
 .btn:hover{background:var(--bn-faint);}
 .btn-primary{background:var(--bn);color:#fff;border-color:var(--bn);}
@@ -42,6 +45,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .btn-green:hover{background:var(--bg-dark);}
 .btn-sm{font-size:11px;padding:3px 9px;}
 .btn-danger{background:var(--br-light);color:var(--br);border-color:var(--br);font-size:11px;padding:3px 9px;}
+.btn-edit{background:var(--bn-faint);color:var(--bn);border-color:var(--bn-light);font-size:11px;padding:3px 9px;}
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:1rem;}
 .kpi{background:var(--white);border-radius:8px;border:0.5px solid var(--bbd);padding:0.875rem 1rem;}
 .kpi-label{font-size:10px;color:var(--bt-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
@@ -69,7 +73,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .exp-fill{height:100%;border-radius:3px;}
 .po-back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--bt-muted);cursor:pointer;padding:4px 8px;border-radius:6px;border:0.5px solid var(--bbd);background:var(--white);}
 .po-back-btn:hover{background:var(--bn-faint);}
-.po-grid{display:grid;grid-template-columns:1fr 340px;gap:12px;align-items:start;}
+.po-grid{display:grid;grid-template-columns:1fr 360px;gap:12px;align-items:start;}
 .detail-card{background:var(--white);border-radius:10px;border:0.5px solid var(--bbd);margin-bottom:10px;}
 .detail-card-header{padding:0.75rem 1.25rem;border-bottom:0.5px solid var(--bbd);display:flex;align-items:center;justify-content:space-between;}
 .detail-card-title{font-size:12px;font-weight:500;color:var(--bn);text-transform:uppercase;letter-spacing:0.05em;}
@@ -88,7 +92,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .carrier-rank-pill{position:absolute;top:10px;right:10px;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;}
 .rank-1{background:var(--bg-light);color:var(--bg-dark);}.rank-other{background:var(--surf);color:var(--bt-muted);}
 .carrier-card-name{font-size:13px;font-weight:500;color:var(--bn);margin-bottom:6px;}
-.carrier-card-stats{display:flex;gap:16px;margin-bottom:8px;}
+.carrier-card-stats{display:flex;gap:16px;margin-bottom:8px;flex-wrap:wrap;}
 .carrier-stat label{font-size:10px;color:var(--bt-muted);display:block;margin-bottom:1px;}
 .carrier-stat span{font-size:13px;font-weight:500;color:var(--bt);}
 .add-quote-form{background:var(--bn-faint);border-radius:8px;border:0.5px solid var(--bn-light);padding:1rem;}
@@ -98,7 +102,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .form-field.full{grid-column:1/-1;}
 .rate-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:1rem;}
 .rate-toolbar select,.rate-toolbar input{font-size:11.5px;padding:5px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);}
-.drawer{position:absolute;top:0;right:0;bottom:0;width:440px;background:var(--white);border-left:0.5px solid var(--bbd);display:flex;flex-direction:column;z-index:20;transform:translateX(100%);transition:transform 0.2s;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:460px;background:var(--white);border-left:0.5px solid var(--bbd);display:flex;flex-direction:column;z-index:20;transform:translateX(100%);transition:transform 0.2s;box-shadow:-4px 0 24px rgba(0,0,0,0.08);}
 .drawer.open{transform:translateX(0);}
 .drawer-head{padding:1rem 1.25rem;border-bottom:0.5px solid var(--bbd);display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;background:var(--bn-faint);}
 .drawer-body{flex:1;overflow-y:auto;}
@@ -124,9 +128,8 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .bar-val{font-size:11px;color:var(--bt);font-weight:500;width:55px;text-align:right;}
 .lane-group{background:var(--white);border:0.5px solid var(--bbd);border-radius:10px;margin-bottom:8px;overflow:hidden;}
 .lane-group-header{padding:0.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:var(--bn-faint);}
-/* NEW RFQ MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:50;display:flex;align-items:center;justify-content:center;}
-.modal{background:var(--white);border-radius:12px;width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.modal{background:var(--white);border-radius:12px;width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
 .modal-head{padding:1.25rem 1.5rem;border-bottom:0.5px solid var(--bbd);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--white);z-index:1;}
 .modal-body{padding:1.25rem 1.5rem;}
 .modal-section{margin-bottom:1.25rem;}
@@ -139,15 +142,14 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .cond-toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--bt-mid);padding:6px 8px;border-radius:6px;cursor:pointer;border:0.5px solid var(--bbd);}
 .cond-toggle input[type=checkbox]{width:14px;height:14px;accent-color:var(--bn);}
 .modal-foot{padding:1rem 1.5rem;border-top:0.5px solid var(--bbd);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white);}
+.status-select{font-size:11.5px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);cursor:pointer;}
 .hidden{display:none!important;}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--bn);color:#fff;font-size:12px;padding:10px 16px;border-radius:8px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;}
 .toast.show{opacity:1;}
-/* Status selector in PO detail */
-.status-select{font-size:11.5px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);cursor:pointer;}
 </style>
 </head>
 <body>
-<div class="app" style="position:relative">
+<div class="app">
 <div class="sidebar">
   <div class="logo-area">
     <div class="logo-name"><span class="logo-dot"></span>BROTHERS</div>
@@ -186,7 +188,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 <div class="main">
 
 <!-- DASHBOARD -->
-<div id="pg-dashboard">
+<div id="pg-dashboard" class="page-wrap">
   <div class="topbar">
     <div><div class="page-title">Dashboard</div><div class="page-sub" id="dash-date"></div></div>
     <div style="display:flex;gap:7px;">
@@ -205,7 +207,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
       <div class="panel">
         <div class="panel-header"><span class="panel-title">Active requests</span><button class="btn btn-sm" onclick="nav('requests')">View all</button></div>
         <div id="dash-loading" class="loading"><div class="spinner"></div><div class="loading-text">Connecting to Google Sheets...</div></div>
-        <table class="tbl hidden" id="dash-table"><thead><tr><th>PO Number</th><th>Route</th><th>Container</th><th>Status</th><th>Age</th><th>Savings</th></tr></thead><tbody id="dash-tbody"></tbody></table>
+        <div style="overflow-x:auto;"><table class="tbl hidden" id="dash-table"><thead><tr><th>PO Number</th><th>Requestor</th><th>Route</th><th>Container</th><th>Status</th><th>Age</th><th>Savings</th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
       </div>
       <div class="panel">
         <div class="panel-header"><span class="panel-title">Alerts</span></div>
@@ -214,89 +216,88 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     </div>
     <div class="panel">
       <div class="panel-header"><span class="panel-title">Rates expiring soon</span><button class="btn btn-sm" onclick="nav('rates')">View rate library</button></div>
-      <table class="tbl"><thead><tr><th>Carrier</th><th>Route</th><th>Container</th><th>Rate</th><th>Type</th><th>Expires</th><th>Days left</th></tr></thead><tbody id="dash-expiring-tbody"></tbody></table>
+      <div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>Carrier</th><th>Route</th><th>Container</th><th>Rate</th><th>Type</th><th>Expires</th><th>Days left</th></tr></thead><tbody id="dash-expiring-tbody"></tbody></table></div>
     </div>
   </div>
 </div>
 
 <!-- REQUESTS -->
-<div id="pg-requests" class="hidden">
+<div id="pg-requests" class="page-wrap hidden">
   <div class="topbar">
-    <div><div class="page-title">Quote Requests</div><div class="page-sub">Click any row to open PO detail and enter carrier quotes</div></div>
-    <div style="display:flex;gap:7px;align-items:center;">
+    <div><div class="page-title">Quote Requests</div><div class="page-sub">Click any row to open PO detail</div></div>
+    <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;">
       <select class="btn" id="filter-status" onchange="renderRequestsTable()"><option value="">All statuses</option><option>Draft</option><option>Sent to Carriers</option><option>Quotes Received</option><option>Awarded</option></select>
-      <select class="btn" id="filter-container" onchange="renderRequestsTable()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>Reefer</option></select>
+      <select class="btn" id="filter-container" onchange="renderRequestsTable()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
       <button class="btn btn-green" onclick="openNewRFQModal()">+ New RFQ</button>
     </div>
   </div>
   <div class="content">
     <div id="req-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading requests...</div></div>
     <div class="panel hidden" id="req-panel" style="overflow-x:auto;">
-      <table class="tbl"><thead><tr><th>PO Number</th><th>Ready Date</th><th>Origin</th><th>Destination</th><th>Container</th><th>Qty</th><th>Incoterm</th><th>Division</th><th>Urgent</th><th>Pri Transit</th><th>Direct Sail</th><th>Transship</th><th>Supplier Rate</th><th>Target Rate</th><th>Best Rate</th><th>Savings</th><th>Status</th><th>Age</th></tr></thead>
+      <table class="tbl"><thead><tr><th>PO Number</th><th>Requestor</th><th>Ready Date</th><th>Origin</th><th>Destination</th><th>Container</th><th>Qty</th><th>Incoterm</th><th>Division</th><th>Urgent</th><th>Pri Transit</th><th>Direct Sail</th><th>Transship</th><th>Supplier Rate</th><th>Target Rate</th><th>Best Rate</th><th>Savings</th><th>Status</th><th>Age</th></tr></thead>
       <tbody id="req-tbody"></tbody></table>
     </div>
   </div>
 </div>
 
 <!-- PO DETAIL -->
-<div id="pg-po-detail" class="hidden">
-  <div style="display:flex;flex-direction:column;height:100%;">
-    <div class="topbar">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <button class="po-back-btn" onclick="nav('requests')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Back</button>
-        <div><div class="page-title" id="po-title">—</div><div class="page-sub" id="po-sub">—</div></div>
-      </div>
-      <div style="display:flex;gap:7px;align-items:center;">
-        <span id="po-status-badge"></span>
-        <select class="status-select" id="po-status-select" onchange="updateStatusFromSelect()">
-          <option value="Draft">Draft</option>
-          <option value="Sent to Carriers">Sent to Carriers</option>
-          <option value="Quotes Received">Quotes Received</option>
-          <option value="Awarded">Awarded</option>
-        </select>
-      </div>
+<div id="pg-po-detail" class="page-wrap hidden">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="po-back-btn" onclick="nav('requests')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Back</button>
+      <div><div class="page-title" id="po-title">—</div><div class="page-sub" id="po-sub">—</div></div>
     </div>
-    <div class="content" style="flex:1;overflow-y:auto;">
-      <div id="po-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading quotes...</div></div>
-      <div class="po-grid hidden" id="po-content">
-        <div>
-          <div class="detail-card">
-            <div class="detail-card-header"><span class="detail-card-title">Shipment details</span></div>
-            <div class="detail-card-body"><div class="info-grid" id="po-info-grid"></div></div>
-          </div>
-          <div class="detail-card">
-            <div class="detail-card-header"><span class="detail-card-title">Shipping conditions</span></div>
-            <div class="detail-card-body"><div class="cond-grid" id="po-cond-grid"></div></div>
-          </div>
-          <div class="detail-card hidden" id="po-addl-card">
-            <div class="detail-card-header"><span class="detail-card-title">Additional information</span></div>
-            <div class="detail-card-body"><div style="font-size:12.5px;color:var(--bt-mid);line-height:1.6;" id="po-addl-text"></div></div>
-          </div>
-          <div class="detail-card hidden" id="po-rate-summary-card">
-            <div class="detail-card-header"><span class="detail-card-title">Rate summary</span></div>
-            <div class="detail-card-body"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="po-rate-summary-grid"></div></div>
-          </div>
+    <div style="display:flex;gap:7px;align-items:center;">
+      <span id="po-status-badge"></span>
+      <select class="status-select" id="po-status-select" onchange="updateStatusFromSelect()">
+        <option value="Draft">Draft</option>
+        <option value="Sent to Carriers">Sent to Carriers</option>
+        <option value="Quotes Received">Quotes Received</option>
+        <option value="Awarded">Awarded</option>
+      </select>
+      <button class="btn btn-edit btn-sm" onclick="openEditRFQModal()">✏ Edit RFQ</button>
+    </div>
+  </div>
+  <div class="content">
+    <div id="po-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading quotes...</div></div>
+    <div class="po-grid hidden" id="po-content">
+      <div>
+        <div class="detail-card">
+          <div class="detail-card-header"><span class="detail-card-title">Shipment details</span></div>
+          <div class="detail-card-body"><div class="info-grid" id="po-info-grid"></div></div>
         </div>
-        <div>
-          <div class="detail-card">
-            <div class="detail-card-header"><span class="detail-card-title">Carrier quotes</span><span id="po-quotes-count" style="font-size:11px;color:var(--bt-muted);"></span></div>
-            <div class="detail-card-body" style="padding:0.875rem;"><div id="po-carrier-cards"></div></div>
-          </div>
-          <div class="detail-card">
-            <div class="detail-card-header"><span class="detail-card-title">Add carrier quote</span></div>
-            <div class="detail-card-body" style="padding:0.875rem;">
-              <div class="add-quote-form">
-                <div class="form-grid">
-                  <div class="form-field"><label>Carrier name</label><input type="text" id="aq-carrier" placeholder="e.g. Maersk"></div>
-                  <div class="form-field"><label>Rate (USD)</label><input type="number" id="aq-rate" placeholder="e.g. 3200"></div>
-                  <div class="form-field"><label>Transit (days)</label><input type="number" id="aq-transit" placeholder="e.g. 28"></div>
-                  <div class="form-field"><label>Valid until (MM/DD/YY)</label><input type="text" id="aq-valid" placeholder="MM/DD/YY"></div>
-                  <div class="form-field full"><label>Notes (optional)</label><input type="text" id="aq-notes" placeholder="e.g. Direct sailing confirmed"></div>
-                </div>
-                <div style="display:flex;gap:7px;">
-                  <button class="btn btn-green" id="save-quote-btn" onclick="addQuote()">Save quote</button>
-                  <button class="btn" onclick="clearAddForm()">Clear</button>
-                </div>
+        <div class="detail-card">
+          <div class="detail-card-header"><span class="detail-card-title">Shipping conditions</span></div>
+          <div class="detail-card-body"><div class="cond-grid" id="po-cond-grid"></div></div>
+        </div>
+        <div class="detail-card hidden" id="po-addl-card">
+          <div class="detail-card-header"><span class="detail-card-title">Additional information</span></div>
+          <div class="detail-card-body"><div style="font-size:12.5px;color:var(--bt-mid);line-height:1.6;" id="po-addl-text"></div></div>
+        </div>
+        <div class="detail-card hidden" id="po-rate-summary-card">
+          <div class="detail-card-header"><span class="detail-card-title">Rate summary</span></div>
+          <div class="detail-card-body"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="po-rate-summary-grid"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="detail-card">
+          <div class="detail-card-header"><span class="detail-card-title">Carrier quotes</span><span id="po-quotes-count" style="font-size:11px;color:var(--bt-muted);"></span></div>
+          <div class="detail-card-body" style="padding:0.875rem;"><div id="po-carrier-cards"></div></div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-card-header"><span class="detail-card-title">Add carrier quote</span></div>
+          <div class="detail-card-body" style="padding:0.875rem;">
+            <div class="add-quote-form">
+              <div class="form-grid">
+                <div class="form-field"><label>Carrier name</label><input type="text" id="aq-carrier" placeholder="e.g. Maersk"></div>
+                <div class="form-field"><label>Rate (USD)</label><input type="number" id="aq-rate" placeholder="e.g. 3200"></div>
+                <div class="form-field"><label>Transit (days)</label><input type="number" id="aq-transit" placeholder="e.g. 28"></div>
+                <div class="form-field"><label>Valid until (MM/DD/YY)</label><input type="text" id="aq-valid" placeholder="MM/DD/YY"></div>
+                <div class="form-field full"><label>Notes (optional)</label><input type="text" id="aq-notes" placeholder="e.g. Direct sailing confirmed"></div>
+              </div>
+              <div style="display:flex;gap:7px;">
+                <button class="btn btn-green" id="save-quote-btn" onclick="addQuote()">Save quote</button>
+                <button class="btn" onclick="clearAddForm()">Clear</button>
               </div>
             </div>
           </div>
@@ -307,9 +308,9 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 </div>
 
 <!-- RATE LIBRARY -->
-<div id="pg-rates" class="hidden">
+<div id="pg-rates" class="page-wrap hidden">
   <div class="topbar">
-    <div><div class="page-title">Rate Library</div><div class="page-sub">Check before sending an RFQ — valid spot and contract rates</div></div>
+    <div><div class="page-title">Rate Library</div><div class="page-sub">Check before sending an RFQ</div></div>
     <div style="display:flex;gap:7px;"><button class="btn" onclick="exportRatesCSV()">Export CSV</button><button class="btn btn-green" onclick="openAddRateDrawer()">+ Add Rate</button></div>
   </div>
   <div class="content">
@@ -322,9 +323,12 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     <div class="rate-toolbar">
       <select id="rl-type" onchange="renderRateLibrary()"><option value="">Spot & Contract</option><option value="Spot">Spot only</option><option value="Contract">Contract only</option></select>
       <select id="rl-carrier" onchange="renderRateLibrary()"><option value="">All carriers</option></select>
-      <select id="rl-container" onchange="renderRateLibrary()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>Reefer</option></select>
+      <select id="rl-container" onchange="renderRateLibrary()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
+      <!-- FIX 6: origin and destination filters -->
+      <select id="rl-origin" onchange="renderRateLibrary()"><option value="">All origins</option></select>
+      <select id="rl-dest" onchange="renderRateLibrary()"><option value="">All destinations</option></select>
       <select id="rl-validity" onchange="renderRateLibrary()"><option value="">All validity</option><option value="valid">Valid only</option><option value="soon">Expiring ≤ 7d</option><option value="expired">Expired</option></select>
-      <input type="text" id="rl-search" placeholder="Search route, carrier..." oninput="renderRateLibrary()" style="min-width:180px;">
+      <input type="text" id="rl-search" placeholder="Search carrier, route..." oninput="renderRateLibrary()" style="min-width:160px;">
       <button class="btn" onclick="clearRateFilters()">Clear</button>
     </div>
     <div style="display:flex;gap:7px;margin-bottom:10px;">
@@ -333,14 +337,14 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     </div>
     <div id="rate-table-view" class="panel" style="overflow-x:auto;">
       <div id="rl-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading rate library...</div></div>
-      <table class="tbl hidden" id="rl-table"><thead><tr><th>Carrier</th><th>Origin</th><th>Destination</th><th>Container</th><th>Incoterm</th><th>Rate (USD)</th><th>Transit</th><th>Type</th><th>Valid From</th><th>Valid Until</th><th>Days Left</th><th>Source RFQ</th></tr></thead><tbody id="rl-tbody"></tbody></table>
+      <table class="tbl hidden" id="rl-table"><thead><tr><th>Carrier</th><th>Origin</th><th>Destination</th><th>Container</th><th>Incoterm</th><th>Rate (USD)</th><th>Transit</th><th>Type</th><th>Valid From</th><th>Valid Until</th><th>Days Left</th><th>Source PO</th></tr></thead><tbody id="rl-tbody"></tbody></table>
     </div>
     <div id="rate-lane-view" class="hidden"><div id="rl-lane-groups"></div></div>
   </div>
 </div>
 
 <!-- ANALYTICS -->
-<div id="pg-analytics" class="hidden">
+<div id="pg-analytics" class="page-wrap hidden">
   <div class="topbar">
     <div><div class="page-title">Analytics & Export</div><div class="page-sub">Filter, analyze, and export quote data</div></div>
     <div style="display:flex;gap:7px;"><button class="btn" onclick="exportCSV()">Export CSV</button></div>
@@ -348,7 +352,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
   <div class="content">
     <div class="rate-toolbar">
       <select id="a-status" onchange="updateAnalytics()"><option value="">All statuses</option><option>Draft</option><option>Sent to Carriers</option><option>Quotes Received</option><option>Awarded</option></select>
-      <select id="a-container" onchange="updateAnalytics()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>Reefer</option></select>
+      <select id="a-container" onchange="updateAnalytics()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
       <select id="a-division" onchange="updateAnalytics()"><option value="">All divisions</option></select>
       <input type="text" id="a-search" placeholder="Search PO, route..." oninput="updateAnalytics()" style="min-width:180px;">
       <button class="btn" onclick="clearAF()">Clear</button>
@@ -359,14 +363,14 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
       <div class="panel"><div class="panel-header"><span class="panel-title">Quotes by carrier</span></div><div style="padding:0.875rem 1.25rem;"><div class="chart-bar-wrap" id="carrier-chart"></div></div></div>
     </div>
     <div class="panel"><div class="panel-header"><span class="panel-title">Filtered data</span><span id="filtered-count" style="font-size:11px;color:var(--bt-muted);"></span></div>
-      <div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>PO Number</th><th>Route</th><th>Container</th><th>Division</th><th>Incoterm</th><th>Supplier Rate</th><th>Best Rate</th><th>Savings $</th><th>Savings %</th><th>Status</th></tr></thead><tbody id="analytics-tbody"></tbody></table></div>
+      <div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>PO Number</th><th>Requestor</th><th>Route</th><th>Container</th><th>Division</th><th>Incoterm</th><th>Supplier Rate</th><th>Best Rate</th><th>Savings $</th><th>Savings %</th><th>Status</th></tr></thead><tbody id="analytics-tbody"></tbody></table></div>
     </div>
   </div>
 </div>
 
 <!-- CARRIERS -->
-<div id="pg-carriers" class="hidden">
-  <div class="topbar"><div><div class="page-title">Carrier Performance</div><div class="page-sub">Win rates and avg transit — computed from live quote data</div></div></div>
+<div id="pg-carriers" class="page-wrap hidden">
+  <div class="topbar"><div><div class="page-title">Carrier Performance</div><div class="page-sub">Win rates and avg transit</div></div></div>
   <div class="content">
     <div id="carrier-loading" class="loading"><div class="spinner"></div><div class="loading-text">Computing carrier stats...</div></div>
     <div class="panel hidden" id="carrier-panel"><table class="tbl"><thead><tr><th>Carrier</th><th>Quotes submitted</th><th>Awards</th><th>Win rate</th><th>Avg Rate (USD)</th><th>Avg Transit (days)</th></tr></thead><tbody id="carrier-tbody"></tbody></table></div>
@@ -378,17 +382,17 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 <!-- RATE DRAWER -->
 <div class="drawer" id="rate-drawer">
   <div class="drawer-head">
-    <div><div style="font-size:14px;font-weight:500;color:var(--bn);" id="rd-title">Rate Detail</div><div style="font-size:11px;color:var(--bt-muted);margin-top:2px;" id="rd-sub"></div></div>
+    <div><div style="font-size:14px;font-weight:500;color:var(--bn);" id="rd-title">Detail</div><div style="font-size:11px;color:var(--bt-muted);margin-top:2px;" id="rd-sub"></div></div>
     <button onclick="closeDrawer()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--bt-muted);line-height:1;">×</button>
   </div>
   <div class="drawer-body" id="rd-body"></div>
 </div>
 
-<!-- NEW RFQ MODAL -->
+<!-- NEW / EDIT RFQ MODAL -->
 <div class="modal-overlay hidden" id="rfq-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-head">
-      <div style="font-size:15px;font-weight:500;color:var(--bn);">New RFQ</div>
+      <div style="font-size:15px;font-weight:500;color:var(--bn);" id="modal-title">New RFQ</div>
       <button onclick="closeModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--bt-muted);line-height:1;">×</button>
     </div>
     <div class="modal-body">
@@ -396,18 +400,19 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
         <div class="modal-section-title">Shipment details</div>
         <div class="modal-grid">
           <div class="modal-field"><label>PO Number *</label><input type="text" id="nrfq-po" placeholder="e.g. PO12346"></div>
-          <div class="modal-field"><label>Ready Date *</label><input type="text" id="nrfq-date" placeholder="MM/DD/YY"></div>
+          <div class="modal-field"><label>Requestor *</label><input type="text" id="nrfq-requestor" placeholder="e.g. Frank O"></div>
+          <div class="modal-field"><label>Ready Date</label><input type="text" id="nrfq-date" placeholder="MM/DD/YY"></div>
           <div class="modal-field"><label>Port of Origin *</label><input type="text" id="nrfq-origin" placeholder="e.g. Santos, Brazil"></div>
           <div class="modal-field"><label>Port of Destination *</label><input type="text" id="nrfq-dest" placeholder="e.g. New York, USA"></div>
           <div class="modal-field"><label>Container Type</label>
-            <select id="nrfq-container"><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>Reefer</option></select>
+            <select id="nrfq-container"><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
           </div>
           <div class="modal-field"><label>Quantity</label><input type="number" id="nrfq-qty" placeholder="1" value="1" min="1"></div>
           <div class="modal-field"><label>Transit Days</label><input type="number" id="nrfq-transit" placeholder="e.g. 30"></div>
           <div class="modal-field"><label>Incoterm</label>
             <select id="nrfq-incoterm"><option>FOB</option><option>CIF</option><option>EXW</option><option>DDP</option><option>CFR</option></select>
           </div>
-          <div class="modal-field"><label>Division</label><input type="text" id="nrfq-division" placeholder="e.g. Hosh"></div>
+          <div class="modal-field"><label>Division</label><input type="text" id="nrfq-division" placeholder="e.g. Brothers Ingredients"></div>
           <div class="modal-field"><label>Supplier Rate (USD)</label><input type="number" id="nrfq-supplier-rate" placeholder="e.g. 3500"></div>
           <div class="modal-field"><label>Target / Sold Rate (USD)</label><input type="number" id="nrfq-target-rate" placeholder="e.g. 3200"></div>
         </div>
@@ -426,12 +431,12 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Additional information</div>
-        <div class="modal-field full"><textarea id="nrfq-addl" rows="3" placeholder="Any additional details for carriers..."></textarea></div>
+        <div class="modal-field full"><textarea id="nrfq-addl" rows="3" placeholder="Any additional details..."></textarea></div>
       </div>
     </div>
     <div class="modal-foot">
       <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-green" id="save-rfq-btn" onclick="saveNewRFQ()">Save RFQ</button>
+      <button class="btn btn-green" id="save-rfq-btn" onclick="saveRFQFromModal()">Save RFQ</button>
     </div>
   </div>
 </div>
@@ -444,43 +449,63 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwLyAUoC04Nfyh20B6HOS0G
 // ──────────────────────────────────────────────────────────────────
 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
-let rfqs=[], quotes=[], rates=[], currentRFQ=null;
+let rfqs=[], quotes=[], rates=[], currentRFQ=null, editingRFQ=false;
 
 // ── API ────────────────────────────────────────────────────────────
-async function apiGet(action,params={}){const qs=new URLSearchParams({action,...params});const res=await fetch(`${API_URL}?${qs}`);return res.json();}
-async function apiPost(body){const res=await fetch(API_URL,{method:'POST',body:JSON.stringify(body)});return res.json();}
-async function loadAll(){try{[rfqs,rates]=await Promise.all([apiGet('getRFQs'),apiGet('getRates')]);return true;}catch(e){console.error(e);return false;}}
-async function refreshAll(){document.getElementById('refresh-btn').textContent='↻ Syncing...';await loadAll();renderDash();renderRequestsTable();document.getElementById('refresh-btn').textContent='↻ Refresh';document.getElementById('last-sync').textContent='Synced '+new Date().toLocaleTimeString();showToast('Data refreshed');}
+async function apiGet(action,params={}){
+  try{const qs=new URLSearchParams({action,...params});const res=await fetch(`${API_URL}?${qs}`);return res.json();}
+  catch(e){console.error('GET failed:',e);return[];}
+}
+async function apiPost(body){
+  try{const res=await fetch(API_URL,{method:'POST',body:JSON.stringify(body)});return res.json();}
+  catch(e){console.error('POST failed:',e);return{error:e.message};}
+}
+async function loadAll(){
+  try{[rfqs,rates]=await Promise.all([apiGet('getRFQs'),apiGet('getRates')]);return true;}
+  catch(e){console.error(e);return false;}
+}
+async function refreshAll(){
+  document.getElementById('refresh-btn').textContent='↻ Syncing...';
+  await loadAll();renderDash();renderRequestsTable();
+  document.getElementById('refresh-btn').textContent='↻ Refresh';
+  document.getElementById('last-sync').textContent='Synced '+new Date().toLocaleTimeString();
+  showToast('Data refreshed');
+}
 
 // ── HELPERS ────────────────────────────────────────────────────────
-// Fix 6: date formatting — strip time, show MM/DD/YY only
 function fmtDate(ds){
   if(!ds)return'—';
-  // handle various date formats from Sheets
-  const d=new Date(ds);
-  if(isNaN(d))return ds;
-  return(d.getMonth()+1).toString().padStart(2,'0')+'/'+ d.getDate().toString().padStart(2,'0')+'/'+d.getFullYear().toString().slice(-2);
+  const d=new Date(ds);if(isNaN(d.getTime()))return String(ds);
+  return(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')+'/'+d.getFullYear().toString().slice(-2);
 }
 function dF(ds){if(!ds)return null;const d=new Date(ds);d.setHours(0,0,0,0);return Math.round((d-TODAY)/86400000);}
 function eC(d){return d<0?'exp-expired':d<=7?'exp-soon':'exp-valid';}
 function eL(d){return d<0?'Expired':d===0?'Today':d+' days';}
 function eBar(days,total){const pct=Math.max(0,Math.min(100,(days/Math.max(total,1))*100));const col=days<0?'#C0392B':days<=7?'#D4860A':'#4A9B3F';return`<div class="exp-bar"><div class="exp-track"><div class="exp-fill" style="width:${pct.toFixed(0)}%;background:${col};"></div></div></div>`;}
 const sbm={'Draft':'b-draft','Sent to Carriers':'b-sent','Quotes Received':'b-received','Awarded':'b-awarded'};
-function bool(v){return v===true||v==='TRUE'||v==='true';}
-function bestR(rfqId){const rq=quotes.filter(q=>q.RFQ_ID===rfqId);if(!rq.length)return null;return Math.min(...rq.map(q=>parseFloat(q.Rate)));}
-function sv(rfq){const b=bestR(rfq.RFQ_ID||rfq.PO_Number);return b!==null?parseFloat(rfq.Supplier_Rate)-b:null;}
+function bool(v){return v===true||v==='TRUE'||v==='true'||v===1||v==='1';}
+
+// FIX 12: quotes keyed by RFQ_ID which stores PO_Number — handle type mismatch
+function quotesForRFQ(poNumber){return quotes.filter(q=>String(q.RFQ_ID)===String(poNumber));}
+function bestR(poNumber){const rq=quotesForRFQ(poNumber);if(!rq.length)return null;const rates=rq.map(q=>parseFloat(q.Rate)).filter(r=>!isNaN(r));return rates.length?Math.min(...rates):null;}
+function sv(rfq){const b=bestR(rfq.PO_Number);return b!==null?parseFloat(rfq.Supplier_Rate)-b:null;}
 function svP(rfq){const s=sv(rfq);return s!==null?((s/parseFloat(rfq.Supplier_Rate))*100).toFixed(1):null;}
 function fSv(rfq){const s=sv(rfq);if(s===null)return'<span style="color:var(--bt-faint)">—</span>';const cls=s>=0?'savings-pos':'savings-neg';return`<span class="${cls}">${s>=0?'-':'+'}$${Math.abs(s).toLocaleString()} (${Math.abs(svP(rfq))}%)</span>`;}
-// Fix 9: Age computed fresh each time from Created date
+
+// FIX 1: Age — compute from Created timestamp fresh every render
 function age(created){
   if(!created)return'—';
-  const d=new Date(created);if(isNaN(d))return'—';
-  const diff=Math.round((new Date()-d)/86400000);
-  return diff===0?'Today':diff===1?'1d':diff+'d';
+  const d=new Date(created);
+  if(isNaN(d.getTime()))return'—';
+  const diff=Math.floor((Date.now()-d.getTime())/86400000);
+  if(diff===0){
+    const hrs=Math.floor((Date.now()-d.getTime())/3600000);
+    return hrs===0?'<1h':hrs+'h';
+  }
+  return diff+'d';
 }
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-// Route helper: show full city + country
 function route(q){return`${q.Origin_Port||'?'} → ${q.Destination_Port||'?'}`;}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 
 // ── DASHBOARD ──────────────────────────────────────────────────────
 function renderDash(){
@@ -488,7 +513,7 @@ function renderDash(){
   const open=rfqs.filter(r=>r.Status!=='Awarded');
   const awaiting=rfqs.filter(r=>r.Status==='Sent to Carriers');
   const validRates=rates.filter(r=>dF(r.Valid_Until)>=0);
-  const soonRates=rates.filter(r=>{const d=dF(r.Valid_Until);return d>=0&&d<=7;});
+  const soonRates=rates.filter(r=>{const d=dF(r.Valid_Until);return d!==null&&d>=0&&d<=7;});
   document.getElementById('kpi-open').textContent=open.length;
   document.getElementById('kpi-open-sub').textContent=awaiting.length+' awaiting quotes';
   document.getElementById('kpi-await').textContent=awaiting.length;
@@ -499,26 +524,22 @@ function renderDash(){
   document.getElementById('req-badge').textContent=rfqs.filter(r=>r.Status==='Quotes Received').length||'';
   document.getElementById('dash-loading').classList.add('hidden');
   document.getElementById('dash-table').classList.remove('hidden');
-  // Fix 5: use PO_Number instead of RFQ_ID; Fix 4: show full route
-  document.getElementById('dash-tbody').innerHTML=rfqs.slice(0,6).map(q=>`
+  document.getElementById('dash-tbody').innerHTML=rfqs.slice(0,8).map(q=>`
     <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
       <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
-      <td>${route(q)}</td>
-      <td>${q.Container_Type}</td>
+      <td>${q.Requestor||'—'}</td>
+      <td>${route(q)}</td><td>${q.Container_Type}</td>
       <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
-      <td>${age(q.Created)}</td>
-      <td>${fSv(q)}</td>
+      <td>${age(q.Created)}</td><td>${fSv(q)}</td>
     </tr>`).join('');
   const expiring=rates.filter(r=>{const d=dF(r.Valid_Until);return d!==null&&d>=0&&d<=10;}).sort((a,b)=>dF(a.Valid_Until)-dF(b.Valid_Until));
   document.getElementById('dash-expiring-tbody').innerHTML=expiring.map(r=>{const d=dF(r.Valid_Until);return`
     <tr class="clickable" onclick="openRateDrawer('${r.Rate_ID}')">
       <td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td>
       <td>${r.Origin_Port||'?'} → ${r.Destination_Port||'?'}</td>
-      <td>${r.Container_Type}</td>
-      <td style="font-weight:500">$${parseFloat(r.Rate).toLocaleString()}</td>
+      <td>${r.Container_Type}</td><td style="font-weight:500">$${parseFloat(r.Rate||0).toLocaleString()}</td>
       <td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td>
-      <td>${fmtDate(r.Valid_Until)}</td>
-      <td><span class="${eC(d)}">${eL(d)}</span></td>
+      <td>${fmtDate(r.Valid_Until)}</td><td><span class="${eC(d)}">${eL(d)}</span></td>
     </tr>`;}).join('');
   const alerts=[];
   rfqs.filter(r=>r.Status==='Quotes Received').forEach(r=>alerts.push({dot:'var(--br)',text:`${r.PO_Number} — Quotes received, awaiting award.`}));
@@ -537,17 +558,14 @@ function renderRequestsTable(){
   const filtered=rfqs.filter(q=>(!fs||q.Status===fs)&&(!fc||q.Container_Type===fc));
   document.getElementById('req-loading').classList.add('hidden');
   document.getElementById('req-panel').classList.remove('hidden');
-  // Fix 5: removed RFQ ID column; Fix 4: full route; Fix 9: live age
   document.getElementById('req-tbody').innerHTML=filtered.map(q=>`
     <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
       <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
+      <td>${q.Requestor||'—'}</td>
       <td>${fmtDate(q.Ready_Date)}</td>
-      <td>${q.Origin_Port}</td>
-      <td>${q.Destination_Port}</td>
-      <td>${q.Container_Type}</td>
-      <td style="text-align:center">${q.Quantity||1}</td>
-      <td>${q.Incoterm}</td>
-      <td>${q.Division}</td>
+      <td>${q.Origin_Port}</td><td>${q.Destination_Port}</td>
+      <td>${q.Container_Type}</td><td style="text-align:center">${q.Quantity||1}</td>
+      <td>${q.Incoterm}</td><td>${q.Division}</td>
       <td><span class="badge ${bool(q.Cond_Urgent)?'b-urgent':'b-no'}">${bool(q.Cond_Urgent)?'Yes':'No'}</span></td>
       <td><span class="badge ${bool(q.Cond_Priority_Transit)?'b-yes':'b-no'}">${bool(q.Cond_Priority_Transit)?'Yes':'No'}</span></td>
       <td><span class="badge ${bool(q.Cond_Direct_Sailing)?'b-yes':'b-no'}">${bool(q.Cond_Direct_Sailing)?'Yes':'No'}</span></td>
@@ -562,94 +580,153 @@ function renderRequestsTable(){
 }
 
 // ── PO DETAIL ──────────────────────────────────────────────────────
-// Fix 8: use PO_Number as key throughout; Fix 7: clickable rows working
 async function openPODetail(poNumber){
-  currentRFQ=rfqs.find(r=>r.PO_Number===poNumber);
+  currentRFQ=rfqs.find(r=>String(r.PO_Number)===String(poNumber));
   if(!currentRFQ)return;
   nav('po-detail');
   document.getElementById('po-loading').classList.remove('hidden');
   document.getElementById('po-content').classList.add('hidden');
   document.getElementById('po-title').textContent=currentRFQ.PO_Number;
-  document.getElementById('po-sub').textContent=route(currentRFQ)+' · '+currentRFQ.Container_Type+' · '+currentRFQ.Division;
-  // Fix 6: status badge
+  document.getElementById('po-sub').textContent=route(currentRFQ)+' · '+currentRFQ.Container_Type+(currentRFQ.Requestor?' · '+currentRFQ.Requestor:'');
   document.getElementById('po-status-badge').innerHTML=`<span class="badge ${sbm[currentRFQ.Status]||'b-draft'}">${currentRFQ.Status}</span>`;
-  // Fix 6: status selector
   document.getElementById('po-status-select').value=currentRFQ.Status||'Draft';
 
-  // Load quotes using PO_Number as rfqId
-  quotes=await apiGet('getQuotes',{rfqId:currentRFQ.PO_Number});
+  // FIX 12: load quotes and match by PO_Number string comparison
+  const loadedQuotes = await apiGet('getQuotes',{rfqId:String(poNumber)});
+  // Merge into global quotes array for this RFQ
+  quotes = quotes.filter(q=>String(q.RFQ_ID)!==String(poNumber));
+  quotes.push(...(Array.isArray(loadedQuotes)?loadedQuotes:[]));
 
-  const fields=[
-    ['PO Number',currentRFQ.PO_Number],['Ready Date',fmtDate(currentRFQ.Ready_Date)],
-    ['Origin Port',currentRFQ.Origin_Port],['Destination Port',currentRFQ.Destination_Port],
-    ['Container Type',currentRFQ.Container_Type],['Quantity',(currentRFQ.Quantity||1)+' container(s)'],
-    ['Transit (days)',currentRFQ.Transit_Days],['Incoterm',currentRFQ.Incoterm],
-    ['Division',currentRFQ.Division],['Supplier Rate','$'+parseFloat(currentRFQ.Supplier_Rate||0).toLocaleString()],
-    ['Target Rate','$'+parseFloat(currentRFQ.Target_Rate||0).toLocaleString()],['Age',age(currentRFQ.Created)]
-  ];
-  document.getElementById('po-info-grid').innerHTML=fields.map(([l,v])=>`<div class="info-field"><label>${l}</label><span>${v||'—'}</span></div>`).join('');
-
-  const conds=[['Rate needed urgently (24h)',currentRFQ.Cond_Urgent],['Prioritize transit over cost',currentRFQ.Cond_Priority_Transit],['Prioritize cost over transit',currentRFQ.Cond_Priority_Cost],['Direct sailing if available',currentRFQ.Cond_Direct_Sailing],['Transshipping allowed',currentRFQ.Cond_Transshipping],['Genset needed',currentRFQ.Cond_Genset],['Origin inland rates needed',currentRFQ.Cond_Origin_Inland]];
-  document.getElementById('po-cond-grid').innerHTML=conds.map(([k,v])=>`<div class="cond-item"><div class="cond-check ${bool(v)?'on':''}"></div>${k}</div>`).join('');
-
-  const addlCard=document.getElementById('po-addl-card');
-  if(currentRFQ.Additional_Info){addlCard.classList.remove('hidden');document.getElementById('po-addl-text').textContent=currentRFQ.Additional_Info;}
-  else addlCard.classList.add('hidden');
-
+  renderPOInfo();
   renderCarrierCards();
   renderRateSummary();
   document.getElementById('po-loading').classList.add('hidden');
   document.getElementById('po-content').classList.remove('hidden');
 }
 
-// Fix 6: update status via dropdown in topbar
-async function updateStatusFromSelect(){
-  const newStatus=document.getElementById('po-status-select').value;
-  if(!currentRFQ||newStatus===currentRFQ.Status)return;
-  await apiPost({action:'updateStatus',rfqId:currentRFQ.PO_Number,status:newStatus});
-  currentRFQ.Status=newStatus;
-  document.getElementById('po-status-badge').innerHTML=`<span class="badge ${sbm[newStatus]||'b-draft'}">${newStatus}</span>`;
-  const rfq=rfqs.find(r=>r.PO_Number===currentRFQ.PO_Number);if(rfq)rfq.Status=newStatus;
-  renderDash();showToast('Status updated to: '+newStatus);
+function renderPOInfo(){
+  if(!currentRFQ)return;
+  const fields=[
+    ['PO Number',currentRFQ.PO_Number],['Requestor',currentRFQ.Requestor||'—'],
+    ['Ready Date',fmtDate(currentRFQ.Ready_Date)],['Status',currentRFQ.Status],
+    ['Origin Port',currentRFQ.Origin_Port],['Destination Port',currentRFQ.Destination_Port],
+    ['Container Type',currentRFQ.Container_Type],['Quantity',(currentRFQ.Quantity||1)+' container(s)'],
+    ['Transit (days)',currentRFQ.Transit_Days||'—'],['Incoterm',currentRFQ.Incoterm],
+    ['Division',currentRFQ.Division],['Supplier Rate','$'+parseFloat(currentRFQ.Supplier_Rate||0).toLocaleString()],
+    ['Target Rate','$'+parseFloat(currentRFQ.Target_Rate||0).toLocaleString()],['Age',age(currentRFQ.Created)]
+  ];
+  document.getElementById('po-info-grid').innerHTML=fields.map(([l,v])=>`<div class="info-field"><label>${l}</label><span>${v||'—'}</span></div>`).join('');
+  const conds=[
+    ['Rate needed urgently (24h)',currentRFQ.Cond_Urgent],
+    ['Prioritize transit over cost',currentRFQ.Cond_Priority_Transit],
+    ['Prioritize cost over transit',currentRFQ.Cond_Priority_Cost],
+    ['Direct sailing if available',currentRFQ.Cond_Direct_Sailing],
+    ['Transshipping allowed',currentRFQ.Cond_Transshipping],
+    ['Genset needed',currentRFQ.Cond_Genset],
+    ['Origin inland rates needed',currentRFQ.Cond_Origin_Inland]
+  ];
+  document.getElementById('po-cond-grid').innerHTML=conds.map(([k,v])=>`<div class="cond-item"><div class="cond-check ${bool(v)?'on':''}"></div>${k}</div>`).join('');
+  const addlCard=document.getElementById('po-addl-card');
+  if(currentRFQ.Additional_Info){addlCard.classList.remove('hidden');document.getElementById('po-addl-text').textContent=currentRFQ.Additional_Info;}
+  else addlCard.classList.add('hidden');
 }
 
-// Fix 8: carrier cards use PO_Number as rfqId
+// FIX 12: render carrier cards using quotesForRFQ
 function renderCarrierCards(){
-  const sorted=[...quotes].sort((a,b)=>parseFloat(a.Rate)-parseFloat(b.Rate));
+  if(!currentRFQ)return;
+  const rfqQuotes=quotesForRFQ(currentRFQ.PO_Number);
+  const sorted=[...rfqQuotes].sort((a,b)=>parseFloat(a.Rate||9999)-parseFloat(b.Rate||9999));
   document.getElementById('po-quotes-count').textContent=sorted.length+' quote'+(sorted.length!==1?'s':'')+' received';
-  if(!sorted.length){document.getElementById('po-carrier-cards').innerHTML='<div style="font-size:12px;color:var(--bt-faint);padding:8px 0;">No quotes yet. Use the form below.</div>';return;}
+  if(!sorted.length){
+    document.getElementById('po-carrier-cards').innerHTML='<div style="font-size:12px;color:var(--bt-faint);padding:8px 0;">No quotes yet. Use the form below to add carrier responses.</div>';
+    return;
+  }
   document.getElementById('po-carrier-cards').innerHTML=sorted.map((c,i)=>{
-    const awarded=bool(c.Is_Awarded);const rate=parseFloat(c.Rate);const diff=rate-parseFloat(currentRFQ.Supplier_Rate);
-    const vsColor=diff<=0?'var(--bg-dark)':'var(--br)';const vsLabel=diff<=0?`-$${Math.abs(diff).toLocaleString()} vs supplier`:`+$${Math.abs(diff).toLocaleString()} vs supplier`;
+    const awarded=bool(c.Is_Awarded);
+    const rate=parseFloat(c.Rate||0);
+    const suppRate=parseFloat(currentRFQ.Supplier_Rate||0);
+    const diff=rate-suppRate;
+    const vsColor=diff<=0?'var(--bg-dark)':'var(--br)';
+    const vsLabel=diff<=0?`-$${Math.abs(diff).toLocaleString()} vs supplier`:`+$${Math.abs(diff).toLocaleString()} vs supplier`;
     return`<div class="carrier-card ${awarded?'awarded-card':i===0?'best':''}">
       <div class="carrier-rank-pill ${i===0?'rank-1':'rank-other'}">#${i+1}${i===0?' Best':''}</div>
       <div class="carrier-card-name">${c.Carrier_Name}${awarded?' <span class="badge b-awarded" style="font-size:9px;vertical-align:middle;">Awarded</span>':''}</div>
       <div class="carrier-card-stats">
         <div class="carrier-stat"><label>Rate</label><span style="color:var(--bn)">$${rate.toLocaleString()}</span></div>
-        <div class="carrier-stat"><label>Transit</label><span>${c.Transit_Days} days</span></div>
+        <div class="carrier-stat"><label>Transit</label><span>${c.Transit_Days||'?'} days</span></div>
         ${c.Valid_Until?`<div class="carrier-stat"><label>Valid until</label><span class="${eC(dF(c.Valid_Until))}">${fmtDate(c.Valid_Until)}</span></div>`:''}
       </div>
       ${c.Notes?`<div style="font-size:11px;color:var(--bt-muted);margin-bottom:8px;font-style:italic;">${c.Notes}</div>`:''}
       <div style="font-size:11px;color:${vsColor};margin-bottom:8px;">${vsLabel}</div>
-      <div style="display:flex;gap:7px;">
-        ${awarded?'<span style="font-size:11px;color:var(--bg-dark);font-weight:500;">✓ Awarded</span>':`<button class="btn btn-sm btn-green" onclick="awardCarrier('${c.Quote_ID}','${currentRFQ.PO_Number}')">Award this carrier</button>`}
+      <div style="display:flex;gap:7px;flex-wrap:wrap;">
+        ${awarded?'<span style="font-size:11px;color:var(--bg-dark);font-weight:500;">✓ Awarded</span>':`<button class="btn btn-sm btn-green" onclick="awardCarrier('${c.Quote_ID}','${currentRFQ.PO_Number}')">Award</button>`}
+        <button class="btn btn-edit" onclick="openEditQuoteDrawer('${c.Quote_ID}')">✏ Edit</button>
         <button class="btn btn-danger" onclick="removeQuote('${c.Quote_ID}')">Remove</button>
       </div>
-    </div>`;}).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderRateSummary(){
-  const best=bestR(currentRFQ.PO_Number);const card=document.getElementById('po-rate-summary-card');
+  if(!currentRFQ)return;
+  const best=bestR(currentRFQ.PO_Number);
+  const card=document.getElementById('po-rate-summary-card');
   if(best===null){card.classList.add('hidden');return;}
   card.classList.remove('hidden');
-  const s=parseFloat(currentRFQ.Supplier_Rate)-best;const sp=((s/parseFloat(currentRFQ.Supplier_Rate))*100).toFixed(1);
+  const s=parseFloat(currentRFQ.Supplier_Rate||0)-best;
+  const sp=((s/parseFloat(currentRFQ.Supplier_Rate||1))*100).toFixed(1);
   document.getElementById('po-rate-summary-grid').innerHTML=`
-    <div class="kpi" style="margin:0"><div class="kpi-label">Supplier rate</div><div class="kpi-value" style="font-size:18px;">$${parseFloat(currentRFQ.Supplier_Rate).toLocaleString()}</div></div>
+    <div class="kpi" style="margin:0"><div class="kpi-label">Supplier rate</div><div class="kpi-value" style="font-size:18px;">$${parseFloat(currentRFQ.Supplier_Rate||0).toLocaleString()}</div></div>
     <div class="kpi" style="margin:0"><div class="kpi-label">Best carrier rate</div><div class="kpi-value kpi-ok" style="font-size:18px;">$${best.toLocaleString()}</div></div>
     <div class="kpi" style="margin:0"><div class="kpi-label">Savings</div><div class="kpi-value kpi-ok" style="font-size:18px;">${s>=0?'-':'+'}$${Math.abs(s).toLocaleString()}</div><div class="kpi-sub">${Math.abs(sp)}% ${s>=0?'below':'above'} supplier</div></div>`;
 }
 
-// Fix 8: save quote — uses PO_Number as rfqId
+async function updateStatusFromSelect(){
+  const newStatus=document.getElementById('po-status-select').value;
+  if(!currentRFQ||newStatus===currentRFQ.Status)return;
+  const result=await apiPost({action:'updateStatus',rfqId:currentRFQ.PO_Number,status:newStatus});
+  if(!result.error){
+    currentRFQ.Status=newStatus;
+    document.getElementById('po-status-badge').innerHTML=`<span class="badge ${sbm[newStatus]||'b-draft'}">${newStatus}</span>`;
+    const rfq=rfqs.find(r=>String(r.PO_Number)===String(currentRFQ.PO_Number));
+    if(rfq)rfq.Status=newStatus;
+    renderDash();showToast('Status updated: '+newStatus);
+  }
+}
+
+// FIX 9: Edit quote drawer
+function openEditQuoteDrawer(quoteId){
+  const q=quotesForRFQ(currentRFQ.PO_Number).find(x=>String(x.Quote_ID)===String(quoteId));
+  if(!q)return;
+  document.getElementById('rd-title').textContent='Edit Quote';
+  document.getElementById('rd-sub').textContent=q.Carrier_Name+' — '+currentRFQ.PO_Number;
+  document.getElementById('rd-body').innerHTML=`
+    <div class="dsec"><div class="dsec-title">Edit carrier quote</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${[['Carrier Name','eq-carrier',q.Carrier_Name,'text'],['Rate (USD)','eq-rate',q.Rate,'number'],['Transit (days)','eq-transit',q.Transit_Days,'number'],['Valid Until (MM/DD/YY)','eq-valid',fmtDate(q.Valid_Until),'text'],['Notes','eq-notes',q.Notes,'text']].map(([l,id,val,t])=>`
+          <div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">${l}</div>
+          <input type="${t}" id="${id}" value="${val||''}" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);"></div>`).join('')}
+        <button class="btn btn-green" onclick="saveEditedQuote('${quoteId}')">Save changes</button>
+      </div>
+    </div>`;
+  document.getElementById('rate-drawer').classList.add('open');
+}
+
+async function saveEditedQuote(quoteId){
+  const g=id=>document.getElementById(id)?.value?.trim()||'';
+  const result=await apiPost({
+    action:'updateQuote',quoteId,
+    carrierName:g('eq-carrier'),rate:parseFloat(g('eq-rate')),
+    transitDays:parseInt(g('eq-transit')),validUntil:g('eq-valid'),notes:g('eq-notes')
+  });
+  if(!result.error){
+    const q=quotesForRFQ(currentRFQ.PO_Number).find(x=>String(x.Quote_ID)===String(quoteId));
+    if(q){q.Carrier_Name=g('eq-carrier');q.Rate=parseFloat(g('eq-rate'));q.Transit_Days=parseInt(g('eq-transit'));q.Valid_Until=g('eq-valid');q.Notes=g('eq-notes');}
+    closeDrawer();renderCarrierCards();renderRateSummary();showToast('Quote updated');
+  } else showToast('Error: '+result.error);
+}
+
+// FIX 8: Add quote — clean Quote_ID, no random in Carrier_Name column
 async function addQuote(){
   const carrier=document.getElementById('aq-carrier').value.trim();
   const rate=parseFloat(document.getElementById('aq-rate').value);
@@ -658,47 +735,108 @@ async function addQuote(){
   const notes=document.getElementById('aq-notes').value.trim();
   if(!carrier||isNaN(rate)||isNaN(transit)){showToast('Fill in carrier, rate, and transit days.');return;}
   const btn=document.getElementById('save-quote-btn');btn.textContent='Saving...';btn.disabled=true;
-  const result=await apiPost({action:'saveQuote',rfqId:currentRFQ.PO_Number,carrierName:carrier,rate,transitDays:transit,validUntil:valid,notes});
+  const result=await apiPost({action:'saveQuote',rfqId:String(currentRFQ.PO_Number),carrierName:carrier,rate,transitDays:transit,validUntil:valid,notes});
   if(result.status==='created'){
-    quotes.push({Quote_ID:result.id,RFQ_ID:currentRFQ.PO_Number,Carrier_Name:carrier,Rate:rate,Transit_Days:transit,Valid_Until:valid,Notes:notes,Is_Awarded:false});
+    quotes.push({Quote_ID:result.id,RFQ_ID:String(currentRFQ.PO_Number),Carrier_Name:carrier,Rate:rate,Transit_Days:transit,Valid_Until:valid,Notes:notes,Is_Awarded:false});
     if(currentRFQ.Status==='Draft'||currentRFQ.Status==='Sent to Carriers'){
-      await apiPost({action:'updateStatus',rfqId:currentRFQ.PO_Number,status:'Quotes Received'});
+      await apiPost({action:'updateStatus',rfqId:String(currentRFQ.PO_Number),status:'Quotes Received'});
       currentRFQ.Status='Quotes Received';
       document.getElementById('po-status-badge').innerHTML=`<span class="badge b-received">Quotes Received</span>`;
       document.getElementById('po-status-select').value='Quotes Received';
-      const rfq=rfqs.find(r=>r.PO_Number===currentRFQ.PO_Number);if(rfq)rfq.Status='Quotes Received';
+      const rfq=rfqs.find(r=>String(r.PO_Number)===String(currentRFQ.PO_Number));if(rfq)rfq.Status='Quotes Received';
     }
-    clearAddForm();renderCarrierCards();renderRateSummary();showToast('Quote saved to Google Sheets');
-  } else {showToast('Error saving quote — check console');}
+    clearAddForm();renderCarrierCards();renderRateSummary();showToast('Quote saved');
+  } else showToast('Error saving quote: '+(result.error||'unknown'));
   btn.textContent='Save quote';btn.disabled=false;
 }
 
+// FIX 2: Award — save rate to library automatically
 async function awardCarrier(quoteId,poNumber){
-  const result=await apiPost({action:'awardCarrier',quoteId,rfqId:poNumber});
+  const rfq=rfqs.find(r=>String(r.PO_Number)===String(poNumber))||currentRFQ;
+  const result=await apiPost({
+    action:'awardCarrier',quoteId,rfqId:String(poNumber),
+    saveToLibrary:true,
+    originPort:rfq?.Origin_Port||'',
+    destinationPort:rfq?.Destination_Port||'',
+    containerType:rfq?.Container_Type||'',
+    incoterm:rfq?.Incoterm||''
+  });
   if(result.status==='awarded'){
-    quotes.forEach(q=>{if(q.Quote_ID===quoteId)q.Is_Awarded=true;});
-    const rfq=rfqs.find(r=>r.PO_Number===poNumber);if(rfq)rfq.Status='Awarded';
-    if(currentRFQ){currentRFQ.Status='Awarded';document.getElementById('po-status-badge').innerHTML=`<span class="badge b-awarded">Awarded</span>`;document.getElementById('po-status-select').value='Awarded';}
-    renderCarrierCards();renderRateSummary();renderDash();showToast('Carrier awarded — saved to Google Sheets');
-  }
+    quotesForRFQ(poNumber).forEach(q=>{q.Is_Awarded=String(q.Quote_ID)===String(quoteId);});
+    if(rfq)rfq.Status='Awarded';
+    if(currentRFQ&&String(currentRFQ.PO_Number)===String(poNumber)){
+      currentRFQ.Status='Awarded';
+      document.getElementById('po-status-badge').innerHTML=`<span class="badge b-awarded">Awarded</span>`;
+      document.getElementById('po-status-select').value='Awarded';
+    }
+    renderCarrierCards();renderRateSummary();renderDash();
+    showToast('Carrier awarded — rate saved to Rate Library');
+    // Refresh rates to show new entry
+    rates=await apiGet('getRates');
+  } else showToast('Error: '+(result.error||'unknown'));
 }
 
-function removeQuote(quoteId){quotes=quotes.filter(q=>q.Quote_ID!==quoteId);renderCarrierCards();renderRateSummary();showToast('Quote removed');}
+function removeQuote(quoteId){
+  quotes=quotes.filter(q=>String(q.Quote_ID)!==String(quoteId));
+  renderCarrierCards();renderRateSummary();showToast('Quote removed');
+}
 function clearAddForm(){['aq-carrier','aq-rate','aq-transit','aq-valid','aq-notes'].forEach(id=>document.getElementById(id).value='');}
 
-// ── NEW RFQ MODAL (Fix 3) ──────────────────────────────────────────
-function openNewRFQModal(){document.getElementById('rfq-modal').classList.remove('hidden');}
-function closeModal(){document.getElementById('rfq-modal').classList.add('hidden');}
+// FIX 7: Edit RFQ modal
+function openEditRFQModal(){
+  if(!currentRFQ)return;
+  editingRFQ=true;
+  document.getElementById('modal-title').textContent='Edit RFQ — '+currentRFQ.PO_Number;
+  document.getElementById('save-rfq-btn').textContent='Save changes';
+  // Populate fields
+  document.getElementById('nrfq-po').value=currentRFQ.PO_Number||'';
+  document.getElementById('nrfq-po').disabled=true; // PO Number is the key, don't change it
+  document.getElementById('nrfq-requestor').value=currentRFQ.Requestor||'';
+  document.getElementById('nrfq-date').value=fmtDate(currentRFQ.Ready_Date)||'';
+  document.getElementById('nrfq-origin').value=currentRFQ.Origin_Port||'';
+  document.getElementById('nrfq-dest').value=currentRFQ.Destination_Port||'';
+  document.getElementById('nrfq-container').value=currentRFQ.Container_Type||'20ft Dry';
+  document.getElementById('nrfq-qty').value=currentRFQ.Quantity||1;
+  document.getElementById('nrfq-transit').value=currentRFQ.Transit_Days||'';
+  document.getElementById('nrfq-incoterm').value=currentRFQ.Incoterm||'FOB';
+  document.getElementById('nrfq-division').value=currentRFQ.Division||'';
+  document.getElementById('nrfq-supplier-rate').value=currentRFQ.Supplier_Rate||'';
+  document.getElementById('nrfq-target-rate').value=currentRFQ.Target_Rate||'';
+  document.getElementById('nrfq-urgent').checked=bool(currentRFQ.Cond_Urgent);
+  document.getElementById('nrfq-pri-transit').checked=bool(currentRFQ.Cond_Priority_Transit);
+  document.getElementById('nrfq-pri-cost').checked=bool(currentRFQ.Cond_Priority_Cost);
+  document.getElementById('nrfq-direct').checked=bool(currentRFQ.Cond_Direct_Sailing);
+  document.getElementById('nrfq-transship').checked=bool(currentRFQ.Cond_Transshipping);
+  document.getElementById('nrfq-genset').checked=bool(currentRFQ.Cond_Genset);
+  document.getElementById('nrfq-inland').checked=bool(currentRFQ.Cond_Origin_Inland);
+  document.getElementById('nrfq-addl').value=currentRFQ.Additional_Info||'';
+  document.getElementById('rfq-modal').classList.remove('hidden');
+}
 
-async function saveNewRFQ(){
+function openNewRFQModal(){
+  editingRFQ=false;
+  document.getElementById('modal-title').textContent='New RFQ';
+  document.getElementById('save-rfq-btn').textContent='Save RFQ';
+  document.getElementById('nrfq-po').disabled=false;
+  ['nrfq-po','nrfq-requestor','nrfq-date','nrfq-origin','nrfq-dest','nrfq-division','nrfq-transit','nrfq-supplier-rate','nrfq-target-rate','nrfq-addl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nrfq-qty').value=1;
+  ['nrfq-urgent','nrfq-pri-transit','nrfq-pri-cost','nrfq-direct','nrfq-transship','nrfq-genset','nrfq-inland'].forEach(id=>document.getElementById(id).checked=false);
+  document.getElementById('rfq-modal').classList.remove('hidden');
+}
+
+function closeModal(){
+  document.getElementById('rfq-modal').classList.add('hidden');
+  document.getElementById('nrfq-po').disabled=false;
+}
+
+async function saveRFQFromModal(){
   const po=document.getElementById('nrfq-po').value.trim();
   const origin=document.getElementById('nrfq-origin').value.trim();
   const dest=document.getElementById('nrfq-dest').value.trim();
   if(!po||!origin||!dest){showToast('PO Number, Origin, and Destination are required.');return;}
   const btn=document.getElementById('save-rfq-btn');btn.textContent='Saving...';btn.disabled=true;
-  const newRFQ={
-    action:'saveRFQ',
-    poNumber:po,
+  const payload={
+    poNumber:po,requestor:document.getElementById('nrfq-requestor').value.trim(),
     readyDate:document.getElementById('nrfq-date').value.trim(),
     originPort:origin,destinationPort:dest,
     containerType:document.getElementById('nrfq-container').value,
@@ -718,106 +856,271 @@ async function saveNewRFQ(){
     additionalInfo:document.getElementById('nrfq-addl').value.trim(),
     status:'Draft'
   };
-  const result=await apiPost(newRFQ);
-  if(result.status==='created'){
-    rfqs.unshift({PO_Number:po,Ready_Date:newRFQ.readyDate,Origin_Port:origin,Destination_Port:dest,Container_Type:newRFQ.containerType,Quantity:newRFQ.quantity,Transit_Days:newRFQ.transitDays,Incoterm:newRFQ.incoterm,Division:newRFQ.division,Supplier_Rate:newRFQ.supplierRate,Target_Rate:newRFQ.targetRate,Cond_Urgent:newRFQ.condUrgent,Cond_Priority_Transit:newRFQ.condPriorityTransit,Cond_Priority_Cost:newRFQ.condPriorityCost,Cond_Direct_Sailing:newRFQ.condDirectSailing,Cond_Transshipping:newRFQ.condTransshipping,Cond_Genset:newRFQ.condGenset,Cond_Origin_Inland:newRFQ.condOriginInland,Additional_Info:newRFQ.additionalInfo,Status:'Draft',Created:new Date().toISOString()});
-    closeModal();renderDash();renderRequestsTable();showToast('RFQ saved — PO '+po);
-    // clear form
-    ['nrfq-po','nrfq-date','nrfq-origin','nrfq-dest','nrfq-division','nrfq-transit','nrfq-supplier-rate','nrfq-target-rate','nrfq-addl'].forEach(id=>document.getElementById(id).value='');
-    ['nrfq-urgent','nrfq-pri-transit','nrfq-pri-cost','nrfq-direct','nrfq-transship','nrfq-genset','nrfq-inland'].forEach(id=>document.getElementById(id).checked=false);
-  } else {showToast('Error saving RFQ — check console');}
-  btn.textContent='Save RFQ';btn.disabled=false;
+
+  if(editingRFQ){
+    const result=await apiPost({action:'updateRFQ',...payload});
+    if(!result.error){
+      Object.assign(currentRFQ,{
+        Requestor:payload.requestor,Ready_Date:payload.readyDate,
+        Origin_Port:payload.originPort,Destination_Port:payload.destinationPort,
+        Container_Type:payload.containerType,Quantity:payload.quantity,
+        Transit_Days:payload.transitDays,Incoterm:payload.incoterm,
+        Division:payload.division,Supplier_Rate:payload.supplierRate,
+        Target_Rate:payload.targetRate,Additional_Info:payload.additionalInfo,
+        Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,
+        Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,
+        Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,
+        Cond_Origin_Inland:payload.condOriginInland
+      });
+      closeModal();renderPOInfo();renderDash();renderRequestsTable();showToast('RFQ updated');
+    } else showToast('Error: '+result.error);
+  } else {
+    const result=await apiPost({action:'saveRFQ',...payload});
+    if(result.status==='created'){
+      rfqs.unshift({PO_Number:po,Requestor:payload.requestor,Ready_Date:payload.readyDate,Origin_Port:origin,Destination_Port:dest,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland,Additional_Info:payload.additionalInfo,Status:'Draft',Created:new Date().toISOString()});
+      closeModal();renderDash();renderRequestsTable();showToast('RFQ saved — PO '+po);
+    } else showToast('Error: '+(result.error||'unknown'));
+  }
+  btn.textContent=editingRFQ?'Save changes':'Save RFQ';btn.disabled=false;
 }
 
 // ── RATE LIBRARY ───────────────────────────────────────────────────
 let rateView='table';
-function setRateView(v){rateView=v;document.getElementById('rate-table-view').classList.toggle('hidden',v!=='table');document.getElementById('rate-lane-view').classList.toggle('hidden',v!=='lane');document.getElementById('view-btn-table').style.background=v==='table'?'var(--bn-faint)':'var(--white)';document.getElementById('view-btn-lane').style.background=v==='lane'?'var(--bn-faint)':'var(--white)';renderRateLibrary();}
-function getRF(){const ft=document.getElementById('rl-type')?.value||'';const fc=document.getElementById('rl-carrier')?.value||'';const fcon=document.getElementById('rl-container')?.value||'';const fv=document.getElementById('rl-validity')?.value||'';const fs=(document.getElementById('rl-search')?.value||'').toLowerCase();return rates.filter(r=>{const d=dF(r.Valid_Until);return(!ft||r.Rate_Type===ft)&&(!fc||r.Carrier_Name===fc)&&(!fcon||r.Container_Type===fcon)&&(!fv||(fv==='valid'&&d>=0)||(fv==='soon'&&d>=0&&d<=7)||(fv==='expired'&&d<0))&&(!fs||(r.Carrier_Name+r.Origin_Port+r.Destination_Port+r.Container_Type).toLowerCase().includes(fs));});}
+function setRateView(v){
+  rateView=v;
+  document.getElementById('rate-table-view').classList.toggle('hidden',v!=='table');
+  document.getElementById('rate-lane-view').classList.toggle('hidden',v!=='lane');
+  document.getElementById('view-btn-table').style.background=v==='table'?'var(--bn-faint)':'var(--white)';
+  document.getElementById('view-btn-lane').style.background=v==='lane'?'var(--bn-faint)':'var(--white)';
+  renderRateLibrary();
+}
+
+function populateRLFilters(){
+  // FIX 6: populate origin and destination filters dynamically
+  const origins=[...new Set(rates.map(r=>r.Origin_Port).filter(Boolean))].sort();
+  const dests=[...new Set(rates.map(r=>r.Destination_Port).filter(Boolean))].sort();
+  const carriers=[...new Set(rates.map(r=>r.Carrier_Name).filter(Boolean))].sort();
+  const oSel=document.getElementById('rl-origin');
+  const dSel=document.getElementById('rl-dest');
+  const cSel=document.getElementById('rl-carrier');
+  [oSel,dSel,cSel].forEach(s=>{while(s.options.length>1)s.remove(1);});
+  origins.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=o;oSel.appendChild(op);});
+  dests.forEach(d=>{const op=document.createElement('option');op.value=d;op.textContent=d;dSel.appendChild(op);});
+  carriers.forEach(c=>{const op=document.createElement('option');op.value=c;op.textContent=c;cSel.appendChild(op);});
+}
+
+function getRF(){
+  const ft=document.getElementById('rl-type')?.value||'';
+  const fc=document.getElementById('rl-carrier')?.value||'';
+  const fcon=document.getElementById('rl-container')?.value||'';
+  const fo=document.getElementById('rl-origin')?.value||'';
+  const fd=document.getElementById('rl-dest')?.value||'';
+  const fv=document.getElementById('rl-validity')?.value||'';
+  const fs=(document.getElementById('rl-search')?.value||'').toLowerCase();
+  return rates.filter(r=>{
+    const d=dF(r.Valid_Until);
+    return(!ft||r.Rate_Type===ft)&&(!fc||r.Carrier_Name===fc)&&(!fcon||r.Container_Type===fcon)&&
+      (!fo||r.Origin_Port===fo)&&(!fd||r.Destination_Port===fd)&&
+      (!fv||(fv==='valid'&&d>=0)||(fv==='soon'&&d>=0&&d<=7)||(fv==='expired'&&d<0))&&
+      (!fs||(r.Carrier_Name+r.Origin_Port+r.Destination_Port+r.Container_Type).toLowerCase().includes(fs));
+  });
+}
 
 function renderRateLibrary(){
-  const data=getRF();const valid=rates.filter(r=>dF(r.Valid_Until)>=0);const soon=rates.filter(r=>{const d=dF(r.Valid_Until);return d>=0&&d<=7;});const expired=rates.filter(r=>dF(r.Valid_Until)<0);const uc=[...new Set(rates.map(r=>r.Carrier_Name))];
-  document.getElementById('rl-valid').textContent=valid.length;document.getElementById('rl-soon').textContent=soon.length;document.getElementById('rl-expired').textContent=expired.length;document.getElementById('rl-carriers').textContent=uc.length;
-  const sel=document.getElementById('rl-carrier');if(sel.options.length<=1)uc.sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
-  document.getElementById('rl-loading').classList.add('hidden');document.getElementById('rl-table').classList.remove('hidden');
+  populateRLFilters();
+  const data=getRF();
+  const valid=rates.filter(r=>dF(r.Valid_Until)>=0);
+  const soon=rates.filter(r=>{const d=dF(r.Valid_Until);return d!==null&&d>=0&&d<=7;});
+  const expired=rates.filter(r=>dF(r.Valid_Until)<0);
+  document.getElementById('rl-valid').textContent=valid.length;
+  document.getElementById('rl-soon').textContent=soon.length;
+  document.getElementById('rl-expired').textContent=expired.length;
+  document.getElementById('rl-carriers').textContent=[...new Set(rates.map(r=>r.Carrier_Name))].length;
+  document.getElementById('rl-loading').classList.add('hidden');
+  document.getElementById('rl-table').classList.remove('hidden');
+
   if(rateView==='table'){
-    // Fix 1: added Incoterm column; Fix 2: full route; Fix 6: fmtDate
-    document.getElementById('rl-tbody').innerHTML=data.map(r=>{const d=dF(r.Valid_Until);const total=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);return`<tr class="clickable" onclick="openRateDrawer('${r.Rate_ID}')">
-      <td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td>
-      <td>${r.Origin_Port||'?'}</td><td>${r.Destination_Port||'?'}</td>
-      <td>${r.Container_Type}</td>
-      <td>${r.Incoterm||'—'}</td>
-      <td style="font-weight:500">$${parseFloat(r.Rate).toLocaleString()}</td>
-      <td>${r.Transit_Days}</td>
-      <td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td>
-      <td style="color:var(--bt-muted)">${fmtDate(r.Valid_From)}</td>
-      <td style="color:var(--bt-muted)">${fmtDate(r.Valid_Until)}</td>
-      <td><div style="display:flex;align-items:center;gap:7px;">${eBar(d,total)}<span class="${eC(d)}">${eL(d)}</span></div></td>
-      <td style="color:var(--bn-mid);font-size:11px">${r.Source_RFQ||'—'}</td>
-    </tr>`;}).join('');
+    document.getElementById('rl-tbody').innerHTML=data.map(r=>{
+      const d=dF(r.Valid_Until);
+      const total=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
+      return`<tr class="clickable" onclick="openRateDrawer('${r.Rate_ID}')">
+        <td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td>
+        <td>${r.Origin_Port||'?'}</td><td>${r.Destination_Port||'?'}</td>
+        <td>${r.Container_Type}</td><td>${r.Incoterm||'—'}</td>
+        <td style="font-weight:500">$${parseFloat(r.Rate||0).toLocaleString()}</td>
+        <td>${r.Transit_Days}</td>
+        <td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td>
+        <td style="color:var(--bt-muted)">${fmtDate(r.Valid_From)}</td>
+        <td style="color:var(--bt-muted)">${fmtDate(r.Valid_Until)}</td>
+        <td><div style="display:flex;align-items:center;gap:7px;">${eBar(d,total)}<span class="${eC(d)}">${eL(d)}</span></div></td>
+        <td style="color:var(--bn-mid);font-size:11px">${r.Source_RFQ||'—'}</td>
+      </tr>`;
+    }).join('');
   } else {
-    const lm={};data.forEach(r=>{const k=r.Origin_Port+'|||'+r.Destination_Port+'|||'+r.Container_Type;if(!lm[k])lm[k]=[];lm[k].push(r);});
-    document.getElementById('rl-lane-groups').innerHTML=Object.entries(lm).map(([k,rs])=>{const[o,d,c]=k.split('|||');const vi=rs.filter(r=>dF(r.Valid_Until)>=0);const mr=Math.min(...rs.map(r=>parseFloat(r.Rate)));return`<div class="lane-group"><div class="lane-group-header" onclick="this.nextElementSibling.classList.toggle('hidden')"><div><div style="font-size:13px;font-weight:500;color:var(--bn)">${o||'?'} → ${d||'?'}</div><div style="font-size:11px;color:var(--bt-muted);margin-top:2px">${c} · ${rs.length} rate${rs.length>1?'s':''} · ${vi.length} valid</div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:500;color:var(--bn-mid)">From $${mr.toLocaleString()}</span>${vi.length===0?'<span class="badge b-urgent">No valid rates</span>':''}</div></div><div><table class="tbl"><thead><tr><th>Carrier</th><th>Incoterm</th><th>Rate</th><th>Transit</th><th>Type</th><th>Valid Until</th><th>Days Left</th></tr></thead><tbody>${rs.map(r=>{const d2=dF(r.Valid_Until);const t2=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);return`<tr class="clickable" onclick="openRateDrawer('${r.Rate_ID}')"><td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td><td>${r.Incoterm||'—'}</td><td style="font-weight:500">$${parseFloat(r.Rate).toLocaleString()}</td><td>${r.Transit_Days}d</td><td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td><td>${fmtDate(r.Valid_Until)}</td><td><div style="display:flex;align-items:center;gap:7px;">${eBar(d2,t2)}<span class="${eC(d2)}">${eL(d2)}</span></div></td></tr>`;}).join('')}</tbody></table></div></div>`;}).join('');
+    const lm={};
+    data.forEach(r=>{const k=r.Origin_Port+'|||'+r.Destination_Port+'|||'+r.Container_Type;if(!lm[k])lm[k]=[];lm[k].push(r);});
+    document.getElementById('rl-lane-groups').innerHTML=Object.entries(lm).map(([k,rs])=>{
+      const[o,d,c]=k.split('|||');
+      const vi=rs.filter(r=>dF(r.Valid_Until)>=0);
+      const mr=Math.min(...rs.map(r=>parseFloat(r.Rate||9999)));
+      return`<div class="lane-group">
+        <div class="lane-group-header" onclick="this.nextElementSibling.classList.toggle('hidden')">
+          <div><div style="font-size:13px;font-weight:500;color:var(--bn)">${o||'?'} → ${d||'?'}</div>
+          <div style="font-size:11px;color:var(--bt-muted);margin-top:2px">${c} · ${rs.length} rate${rs.length>1?'s':''} · ${vi.length} valid</div></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:12px;font-weight:500;color:var(--bn-mid)">From $${mr.toLocaleString()}</span>
+            ${vi.length===0?'<span class="badge b-urgent">No valid rates</span>':''}
+          </div>
+        </div>
+        <div><table class="tbl"><thead><tr><th>Carrier</th><th>Incoterm</th><th>Rate</th><th>Transit</th><th>Type</th><th>Valid Until</th><th>Days Left</th></tr></thead>
+        <tbody>${rs.map(r=>{const d2=dF(r.Valid_Until);const t2=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
+          return`<tr class="clickable" onclick="openRateDrawer('${r.Rate_ID}')">
+            <td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td>
+            <td>${r.Incoterm||'—'}</td>
+            <td style="font-weight:500">$${parseFloat(r.Rate||0).toLocaleString()}</td>
+            <td>${r.Transit_Days}d</td>
+            <td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td>
+            <td>${fmtDate(r.Valid_Until)}</td>
+            <td><div style="display:flex;align-items:center;gap:7px;">${eBar(d2,t2)}<span class="${eC(d2)}">${eL(d2)}</span></div></td>
+          </tr>`;}).join('')}</tbody></table></div>
+      </div>`;
+    }).join('');
   }
 }
 
 function openRateDrawer(id){
-  const r=rates.find(x=>x.Rate_ID===id);if(!r)return;const d=dF(r.Valid_Until);const total=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
+  const r=rates.find(x=>String(x.Rate_ID)===String(id));if(!r)return;
+  const d=dF(r.Valid_Until);
+  const total=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
   document.getElementById('rd-title').textContent=r.Carrier_Name+' — '+(r.Origin_Port||'?')+' → '+(r.Destination_Port||'?');
   document.getElementById('rd-sub').textContent=r.Container_Type+' · '+r.Rate_Type+' rate';
-  document.getElementById('rd-body').innerHTML=`<div class="dsec"><div class="dsec-title">Rate details</div><div class="dg2"><div class="df"><label>Carrier</label><span style="font-weight:500">${r.Carrier_Name}</span></div><div class="df"><label>Type</label><span><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></span></div><div class="df"><label>Origin Port</label><span>${r.Origin_Port||'?'}</span></div><div class="df"><label>Destination Port</label><span>${r.Destination_Port||'?'}</span></div><div class="df"><label>Container</label><span>${r.Container_Type}</span></div><div class="df"><label>Incoterm</label><span>${r.Incoterm||'—'}</span></div><div class="df"><label>Transit</label><span>${r.Transit_Days} days</span></div><div class="df"><label>Rate (USD)</label><span style="font-size:16px;font-weight:500;color:var(--bn)">$${parseFloat(r.Rate).toLocaleString()}</span></div></div></div><div class="dsec"><div class="dsec-title">Validity</div><div class="dg2" style="margin-bottom:12px;"><div class="df"><label>Valid From</label><span>${fmtDate(r.Valid_From)}</span></div><div class="df"><label>Valid Until</label><span>${fmtDate(r.Valid_Until)}</span></div></div><div style="background:var(--bn-faint);border-radius:8px;padding:0.75rem 1rem;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:11px;color:var(--bt-muted);">Validity period</span><span class="${eC(d)}" style="font-size:13px;font-weight:500;">${d<0?'Expired':d===0?'Expires today':'Expires in '+eL(d)}</span></div><div style="height:8px;background:var(--white);border-radius:4px;overflow:hidden;"><div style="height:100%;width:${Math.max(0,Math.min(100,d/Math.max(total,1)*100)).toFixed(0)}%;background:${d<0?'#C0392B':d<=7?'#D4860A':'#4A9B3F'};border-radius:4px;"></div></div></div></div><div class="dsec" style="border:none"><div class="dsec-title">Source</div><div class="df"><label>Source RFQ / PO</label><span style="color:var(--bn-mid)">${r.Source_RFQ||'—'}</span></div></div>`;
+  document.getElementById('rd-body').innerHTML=`
+    <div class="dsec"><div class="dsec-title">Rate details</div>
+      <div class="dg2">
+        <div class="df"><label>Carrier</label><span style="font-weight:500">${r.Carrier_Name}</span></div>
+        <div class="df"><label>Type</label><span><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></span></div>
+        <div class="df"><label>Origin Port</label><span>${r.Origin_Port||'?'}</span></div>
+        <div class="df"><label>Destination Port</label><span>${r.Destination_Port||'?'}</span></div>
+        <div class="df"><label>Container</label><span>${r.Container_Type}</span></div>
+        <div class="df"><label>Incoterm</label><span>${r.Incoterm||'—'}</span></div>
+        <div class="df"><label>Transit</label><span>${r.Transit_Days} days</span></div>
+        <div class="df"><label>Rate (USD)</label><span style="font-size:16px;font-weight:500;color:var(--bn)">$${parseFloat(r.Rate||0).toLocaleString()}</span></div>
+      </div>
+    </div>
+    <div class="dsec"><div class="dsec-title">Validity</div>
+      <div class="dg2" style="margin-bottom:12px;">
+        <div class="df"><label>Valid From</label><span>${fmtDate(r.Valid_From)}</span></div>
+        <div class="df"><label>Valid Until</label><span>${fmtDate(r.Valid_Until)}</span></div>
+      </div>
+      <div style="background:var(--bn-faint);border-radius:8px;padding:0.75rem 1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:11px;color:var(--bt-muted);">Validity period</span>
+          <span class="${eC(d)}" style="font-size:13px;font-weight:500;">${d<0?'Expired':d===0?'Expires today':'Expires in '+eL(d)}</span>
+        </div>
+        <div style="height:8px;background:var(--white);border-radius:4px;overflow:hidden;">
+          <div style="height:100%;width:${Math.max(0,Math.min(100,d/Math.max(total,1)*100)).toFixed(0)}%;background:${d<0?'#C0392B':d<=7?'#D4860A':'#4A9B3F'};border-radius:4px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dsec" style="border:none"><div class="dsec-title">Source</div>
+      <div class="df"><label>Source PO</label><span style="color:var(--bn-mid)">${r.Source_RFQ||'—'}</span></div>
+    </div>`;
   document.getElementById('rate-drawer').classList.add('open');
 }
 
 function openAddRateDrawer(){
-  document.getElementById('rd-title').textContent='Add Rate';document.getElementById('rd-sub').textContent='Manually enter a carrier rate';
-  document.getElementById('rd-body').innerHTML=`<div class="dsec"><div class="dsec-title">Rate information</div><div style="display:flex;flex-direction:column;gap:10px;">${['Carrier Name','Origin Port (City, Country)','Destination Port (City, Country)','Container Type','Incoterm','Rate (USD)','Transit (days)','Valid From (MM/DD/YY)','Valid Until (MM/DD/YY)','Source PO Number'].map(f=>`<div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">${f}</div><input type="text" id="nr-${f.replace(/\W/g,'')}" placeholder="${f}" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);"></div>`).join('')}<div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">Rate Type</div><select id="nr-type" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);"><option>Spot</option><option>Contract</option></select></div><button class="btn btn-green" onclick="saveNewRate()">Save Rate</button></div></div>`;
+  document.getElementById('rd-title').textContent='Add Rate';
+  document.getElementById('rd-sub').textContent='Manually enter a carrier rate';
+  const fields=[['Carrier Name','nr-carrier','text'],['Origin Port (City, Country)','nr-origin','text'],['Destination Port (City, Country)','nr-dest','text'],['Container Type','nr-container','text'],['Incoterm','nr-incoterm','text'],['Rate (USD)','nr-rate','number'],['Transit (days)','nr-transit','number'],['Valid From (MM/DD/YY)','nr-from','text'],['Valid Until (MM/DD/YY)','nr-until','text'],['Source PO Number','nr-source','text']];
+  document.getElementById('rd-body').innerHTML=`<div class="dsec"><div class="dsec-title">Rate information</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${fields.map(([l,id,t])=>`<div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">${l}</div>
+        <input type="${t}" id="${id}" placeholder="${l}" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);"></div>`).join('')}
+      <div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">Rate Type</div>
+        <select id="nr-type" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);">
+          <option>Spot</option><option>Contract</option></select></div>
+      <button class="btn btn-green" onclick="saveNewRate()">Save Rate</button>
+    </div></div>`;
   document.getElementById('rate-drawer').classList.add('open');
 }
 
 async function saveNewRate(){
   const g=id=>document.getElementById(id)?.value?.trim()||'';
-  const body={action:'saveRate',carrierName:g('nr-CarrierName'),originPort:g('nr-OriginPortCityCountry'),destinationPort:g('nr-DestinationPortCityCountry'),containerType:g('nr-ContainerType'),incoterm:g('nr-Incoterm'),rate:parseFloat(g('nr-RateUSD')),transitDays:parseInt(g('nr-Transitdays')),validFrom:g('nr-ValidFromMMDDYY'),validUntil:g('nr-ValidUntilMMDDYY'),sourceRFQ:g('nr-SourcePONumber'),rateType:document.getElementById('nr-type')?.value||'Spot'};
+  const body={action:'saveRate',carrierName:g('nr-carrier'),originPort:g('nr-origin'),destinationPort:g('nr-dest'),containerType:g('nr-container'),incoterm:g('nr-incoterm'),rate:parseFloat(g('nr-rate')),transitDays:parseInt(g('nr-transit')),validFrom:g('nr-from'),validUntil:g('nr-until'),sourceRFQ:g('nr-source'),rateType:document.getElementById('nr-type')?.value||'Spot'};
   const result=await apiPost(body);
-  if(result.status==='created'){rates.push({Rate_ID:result.id,Carrier_Name:body.carrierName,Origin_Port:body.originPort,Destination_Port:body.destinationPort,Container_Type:body.containerType,Incoterm:body.incoterm,Rate:body.rate,Transit_Days:body.transitDays,Rate_Type:body.rateType,Valid_From:body.validFrom,Valid_Until:body.validUntil,Source_RFQ:body.sourceRFQ});closeDrawer();renderRateLibrary();renderDash();showToast('Rate saved to Google Sheets');}
+  if(result.status==='created'){
+    rates.push({Rate_ID:result.id,...body,Valid_From:body.validFrom,Valid_Until:body.validUntil,Carrier_Name:body.carrierName,Origin_Port:body.originPort,Destination_Port:body.destinationPort,Container_Type:body.containerType,Rate:body.rate,Transit_Days:body.transitDays,Rate_Type:body.rateType,Source_RFQ:body.sourceRFQ});
+    closeDrawer();renderRateLibrary();renderDash();showToast('Rate saved');
+  } else showToast('Error: '+(result.error||'unknown'));
 }
 
 function closeDrawer(){document.getElementById('rate-drawer').classList.remove('open');}
-function clearRateFilters(){['rl-type','rl-carrier','rl-container','rl-validity'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const s=document.getElementById('rl-search');if(s)s.value='';renderRateLibrary();}
+function clearRateFilters(){
+  ['rl-type','rl-carrier','rl-container','rl-origin','rl-dest','rl-validity'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  const s=document.getElementById('rl-search');if(s)s.value='';
+  renderRateLibrary();
+}
 
 // ── ANALYTICS ──────────────────────────────────────────────────────
-function getAF(){const fs=document.getElementById('a-status')?.value||'';const fc=document.getElementById('a-container')?.value||'';const fd=document.getElementById('a-division')?.value||'';const fq=(document.getElementById('a-search')?.value||'').toLowerCase();return rfqs.filter(q=>(!fs||q.Status===fs)&&(!fc||q.Container_Type===fc)&&(!fd||q.Division===fd)&&(!fq||(q.PO_Number+q.Origin_Port+q.Destination_Port).toLowerCase().includes(fq)));}
+function getAF(){
+  const fs=document.getElementById('a-status')?.value||'';
+  const fc=document.getElementById('a-container')?.value||'';
+  const fd=document.getElementById('a-division')?.value||'';
+  const fq=(document.getElementById('a-search')?.value||'').toLowerCase();
+  return rfqs.filter(q=>(!fs||q.Status===fs)&&(!fc||q.Container_Type===fc)&&(!fd||q.Division===fd)&&(!fq||(q.PO_Number+(q.Requestor||'')+q.Origin_Port+q.Destination_Port).toLowerCase().includes(fq)));
+}
 
 function updateAnalytics(){
-  const data=getAF();document.getElementById('filtered-count').textContent=data.length+' records';
-  const ws=data.filter(q=>sv(q)!==null);const ts=ws.reduce((s,q)=>s+sv(q),0);const ap=ws.length?(ws.reduce((s,q)=>s+parseFloat(svP(q)),0)/ws.length).toFixed(1):'—';
-  document.getElementById('analytics-stats').innerHTML=`<div class="stat-card"><div class="sc-label">Records</div><div class="sc-val">${data.length}</div></div><div class="stat-card"><div class="sc-label">Total savings vs supplier</div><div class="sc-val" style="color:var(--bg-dark)">$${ts.toLocaleString()}</div><div class="sc-sub">avg ${ap}%</div></div><div class="stat-card"><div class="sc-label">Awarded</div><div class="sc-val">${data.filter(q=>q.Status==='Awarded').length}</div></div>`;
-  const rm={};data.forEach(q=>{const k=route(q);if(!rm[k])rm[k]=[];rm[k].push(sv(q)||0);});
-  const routes=Object.entries(rm).map(([k,v])=>({k,avg:v.reduce((a,b)=>a+b,0)/v.length})).sort((a,b)=>b.avg-a.avg).slice(0,6);const maxR=Math.max(...routes.map(r=>r.avg),1);
+  const data=getAF();
+  document.getElementById('filtered-count').textContent=data.length+' records';
+  const ws=data.filter(q=>sv(q)!==null);
+  const ts=ws.reduce((s,q)=>s+sv(q),0);
+  const ap=ws.length?(ws.reduce((s,q)=>s+parseFloat(svP(q)),0)/ws.length).toFixed(1):'—';
+  document.getElementById('analytics-stats').innerHTML=`
+    <div class="stat-card"><div class="sc-label">Records</div><div class="sc-val">${data.length}</div></div>
+    <div class="stat-card"><div class="sc-label">Total savings vs supplier</div><div class="sc-val" style="color:var(--bg-dark)">$${ts.toLocaleString()}</div><div class="sc-sub">avg ${ap}%</div></div>
+    <div class="stat-card"><div class="sc-label">Awarded</div><div class="sc-val">${data.filter(q=>q.Status==='Awarded').length}</div></div>`;
+  const rm={};
+  data.forEach(q=>{const k=route(q);if(!rm[k])rm[k]=[];rm[k].push(sv(q)||0);});
+  const routes=Object.entries(rm).map(([k,v])=>({k,avg:v.reduce((a,b)=>a+b,0)/v.length})).sort((a,b)=>b.avg-a.avg).slice(0,6);
+  const maxR=Math.max(...routes.map(r=>r.avg),1);
   document.getElementById('savings-chart').innerHTML=routes.map(r=>`<div class="bar-row"><div class="bar-label">${r.k}</div><div class="bar-track-o"><div class="bar-fill" style="width:${Math.max(0,r.avg/maxR*100).toFixed(0)}%;background:${r.avg>=0?'#4A9B3F':'#C0392B'};"></div></div><div class="bar-val" style="color:${r.avg>=0?'var(--bg-dark)':'var(--br)'}">${r.avg>=0?'-':'+'} $${Math.abs(Math.round(r.avg)).toLocaleString()}</div></div>`).join('');
-  const cm={};quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]=0;cm[q.Carrier_Name]++;});const carriers=Object.entries(cm).sort((a,b)=>b[1]-a[1]).slice(0,6);const maxC=Math.max(...carriers.map(c=>c[1]),1);
+  const cm={};quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]=0;cm[q.Carrier_Name]++;});
+  const carriers=Object.entries(cm).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxC=Math.max(...carriers.map(c=>c[1]),1);
   document.getElementById('carrier-chart').innerHTML=carriers.map(c=>`<div class="bar-row"><div class="bar-label">${c[0]}</div><div class="bar-track-o"><div class="bar-fill" style="width:${(c[1]/maxC*100).toFixed(0)}%;background:var(--bn);"></div></div><div class="bar-val">${c[1]}</div></div>`).join('');
-  const divSel=document.getElementById('a-division');if(divSel.options.length<=1){const divs=[...new Set(rfqs.map(r=>r.Division).filter(Boolean))];divs.sort().forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;divSel.appendChild(o);});}
-  document.getElementById('analytics-tbody').innerHTML=data.map(q=>`<tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
-    <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
-    <td>${route(q)}</td><td>${q.Container_Type}</td><td>${q.Division}</td><td>${q.Incoterm}</td>
-    <td>$${parseFloat(q.Supplier_Rate||0).toLocaleString()}</td>
-    <td>${bestR(q.PO_Number)!==null?'$'+bestR(q.PO_Number).toLocaleString():'—'}</td>
-    <td>${sv(q)!==null?'$'+sv(q).toLocaleString():'—'}</td>
-    <td>${svP(q)!==null?svP(q)+'%':'—'}</td>
-    <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
-  </tr>`).join('');
+  const divSel=document.getElementById('a-division');
+  if(divSel.options.length<=1){const divs=[...new Set(rfqs.map(r=>r.Division).filter(Boolean))];divs.sort().forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;divSel.appendChild(o);});}
+  document.getElementById('analytics-tbody').innerHTML=data.map(q=>`
+    <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
+      <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
+      <td>${q.Requestor||'—'}</td>
+      <td>${route(q)}</td><td>${q.Container_Type}</td>
+      <td>${q.Division}</td><td>${q.Incoterm}</td>
+      <td>$${parseFloat(q.Supplier_Rate||0).toLocaleString()}</td>
+      <td>${bestR(q.PO_Number)!==null?'$'+bestR(q.PO_Number).toLocaleString():'—'}</td>
+      <td>${sv(q)!==null?'$'+sv(q).toLocaleString():'—'}</td>
+      <td>${svP(q)!==null?svP(q)+'%':'—'}</td>
+      <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
+    </tr>`).join('');
 }
 function clearAF(){['a-status','a-container','a-division'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const s=document.getElementById('a-search');if(s)s.value='';updateAnalytics();}
 
 // ── CARRIER STATS ──────────────────────────────────────────────────
 function renderCarrierStats(){
-  document.getElementById('carrier-loading').classList.add('hidden');document.getElementById('carrier-panel').classList.remove('hidden');
-  const cm={};quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]={quotes:0,awards:0,totalRate:0,totalTransit:0};cm[q.Carrier_Name].quotes++;if(bool(q.Is_Awarded))cm[q.Carrier_Name].awards++;cm[q.Carrier_Name].totalRate+=parseFloat(q.Rate||0);cm[q.Carrier_Name].totalTransit+=parseInt(q.Transit_Days||0);});
-  document.getElementById('carrier-tbody').innerHTML=Object.entries(cm).sort((a,b)=>b[1].quotes-a[1].quotes).map(([name,s])=>`<tr><td style="font-weight:500;color:var(--bn)">${name}</td><td>${s.quotes}</td><td>${s.awards}</td><td>${s.quotes?((s.awards/s.quotes)*100).toFixed(0)+'%':'—'}</td><td>$${s.quotes?(s.totalRate/s.quotes).toLocaleString(undefined,{maximumFractionDigits:0}):'—'}</td><td>${s.quotes?Math.round(s.totalTransit/s.quotes):'—'}</td></tr>`).join('');
+  document.getElementById('carrier-loading').classList.add('hidden');
+  document.getElementById('carrier-panel').classList.remove('hidden');
+  const cm={};
+  quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]={quotes:0,awards:0,totalRate:0,totalTransit:0};cm[q.Carrier_Name].quotes++;if(bool(q.Is_Awarded))cm[q.Carrier_Name].awards++;cm[q.Carrier_Name].totalRate+=parseFloat(q.Rate||0);cm[q.Carrier_Name].totalTransit+=parseInt(q.Transit_Days||0);});
+  document.getElementById('carrier-tbody').innerHTML=Object.entries(cm).sort((a,b)=>b[1].quotes-a[1].quotes).map(([name,s])=>`
+    <tr><td style="font-weight:500;color:var(--bn)">${name}</td><td>${s.quotes}</td><td>${s.awards}</td>
+    <td>${s.quotes?((s.awards/s.quotes)*100).toFixed(0)+'%':'—'}</td>
+    <td>$${s.quotes?(s.totalRate/s.quotes).toLocaleString(undefined,{maximumFractionDigits:0}):'—'}</td>
+    <td>${s.quotes?Math.round(s.totalTransit/s.quotes):'—'}</td></tr>`).join('');
 }
 
 // ── EXPORT ─────────────────────────────────────────────────────────
-function exportCSV(){const data=getAF();const h=['PO Number','Origin','Dest','Container','Division','Incoterm','Supplier Rate','Best Rate','Savings','Status'];const rows=data.map(q=>[q.PO_Number,q.Origin_Port,q.Destination_Port,q.Container_Type,q.Division,q.Incoterm,q.Supplier_Rate,bestR(q.PO_Number)||'',sv(q)||'',q.Status]);dl([h,...rows],'brothers_quotes.csv');}
+function exportCSV(){const data=getAF();const h=['PO Number','Requestor','Origin','Dest','Container','Division','Incoterm','Supplier Rate','Best Rate','Savings','Status'];const rows=data.map(q=>[q.PO_Number,q.Requestor||'',q.Origin_Port,q.Destination_Port,q.Container_Type,q.Division,q.Incoterm,q.Supplier_Rate,bestR(q.PO_Number)||'',sv(q)||'',q.Status]);dl([h,...rows],'brothers_quotes.csv');}
 function exportRatesCSV(){const data=getRF();const h=['Carrier','Origin','Dest','Container','Incoterm','Rate','Transit','Type','Valid From','Valid Until','Days Left','Source PO'];const rows=data.map(r=>[r.Carrier_Name,r.Origin_Port,r.Destination_Port,r.Container_Type,r.Incoterm||'',r.Rate,r.Transit_Days,r.Rate_Type,fmtDate(r.Valid_From),fmtDate(r.Valid_Until),dF(r.Valid_Until),r.Source_RFQ]);dl([h,...rows],'brothers_rate_library.csv');}
 function dl(rows,name){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));a.download=name;a.click();}
 
