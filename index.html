@@ -445,7 +445,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 
 <script>
 // ── CONFIG ─────────────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbwbVRxt_CV27YJx8vzCsJrR2hmVpHorQ1vOvT6C3tCo2rfrtWwDGN_W2H-OZ8djPmw/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzb2H20sok3uFI2gzZpPfIIthzZZIN1y4KhmQ3v1xx4cxa5wyZlkenXyCFLdUvqOn0/exec';
 // ──────────────────────────────────────────────────────────────────
 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
@@ -492,17 +492,19 @@ function sv(rfq){const b=bestR(rfq.PO_Number);return b!==null?parseFloat(rfq.Sup
 function svP(rfq){const s=sv(rfq);return s!==null?((s/parseFloat(rfq.Supplier_Rate))*100).toFixed(1):null;}
 function fSv(rfq){const s=sv(rfq);if(s===null)return'<span style="color:var(--bt-faint)">—</span>';const cls=s>=0?'savings-pos':'savings-neg';return`<span class="${cls}">${s>=0?'-':'+'}$${Math.abs(s).toLocaleString()} (${Math.abs(svP(rfq))}%)</span>`;}
 
-// FIX 1: Age — compute from Created timestamp fresh every render
-function age(created){
-  if(!created)return'—';
-  const d=new Date(created);
+// Age — uses _PowerAppsId column as created timestamp (written by app on save, or by Power Automate)
+function age(rfq){
+  const ts = rfq['_PowerAppsId'] || rfq['Created'] || '';
+  if(!ts)return'—';
+  const d=new Date(ts);
   if(isNaN(d.getTime()))return'—';
-  const diff=Math.floor((Date.now()-d.getTime())/86400000);
-  if(diff===0){
-    const hrs=Math.floor((Date.now()-d.getTime())/3600000);
+  const diffMs = Date.now()-d.getTime();
+  const diffDays = Math.floor(diffMs/86400000);
+  if(diffDays===0){
+    const hrs=Math.floor(diffMs/3600000);
     return hrs===0?'<1h':hrs+'h';
   }
-  return diff+'d';
+  return diffDays+'d';
 }
 function route(q){return`${q.Origin_Port||'?'} → ${q.Destination_Port||'?'}`;}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
@@ -524,13 +526,13 @@ function renderDash(){
   document.getElementById('req-badge').textContent=rfqs.filter(r=>r.Status==='Quotes Received').length||'';
   document.getElementById('dash-loading').classList.add('hidden');
   document.getElementById('dash-table').classList.remove('hidden');
-  document.getElementById('dash-tbody').innerHTML=rfqs.slice(0,8).map(q=>`
+  document.getElementById('dash-tbody').innerHTML=rfqs.filter(q=>q.Status!=='Awarded').slice(0,8).map(q=>`
     <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
       <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
       <td>${q.Requestor||'—'}</td>
       <td>${route(q)}</td><td>${q.Container_Type}</td>
       <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
-      <td>${age(q.Created)}</td><td>${fSv(q)}</td>
+      <td>${age(q)}</td><td>${fSv(q)}</td>
     </tr>`).join('');
   const expiring=rates.filter(r=>{const d=dF(r.Valid_Until);return d!==null&&d>=0&&d<=10;}).sort((a,b)=>dF(a.Valid_Until)-dF(b.Valid_Until));
   document.getElementById('dash-expiring-tbody').innerHTML=expiring.map(r=>{const d=dF(r.Valid_Until);return`
@@ -575,7 +577,7 @@ function renderRequestsTable(){
       <td>${bestR(q.PO_Number)!==null?'$'+bestR(q.PO_Number).toLocaleString():'<span style="color:var(--bt-faint)">Pending</span>'}</td>
       <td>${fSv(q)}</td>
       <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
-      <td>${age(q.Created)}</td>
+      <td>${age(q)}</td>
     </tr>`).join('');
 }
 
@@ -613,7 +615,7 @@ function renderPOInfo(){
     ['Container Type',currentRFQ.Container_Type],['Quantity',(currentRFQ.Quantity||1)+' container(s)'],
     ['Transit (days)',currentRFQ.Transit_Days||'—'],['Incoterm',currentRFQ.Incoterm],
     ['Division',currentRFQ.Division],['Supplier Rate','$'+parseFloat(currentRFQ.Supplier_Rate||0).toLocaleString()],
-    ['Target Rate','$'+parseFloat(currentRFQ.Target_Rate||0).toLocaleString()],['Age',age(currentRFQ.Created)]
+    ['Target Rate','$'+parseFloat(currentRFQ.Target_Rate||0).toLocaleString()],['Age',age(currentRFQ)]
   ];
   document.getElementById('po-info-grid').innerHTML=fields.map(([l,v])=>`<div class="info-field"><label>${l}</label><span>${v||'—'}</span></div>`).join('');
   const conds=[
@@ -854,7 +856,8 @@ async function saveRFQFromModal(){
     condGenset:document.getElementById('nrfq-genset').checked,
     condOriginInland:document.getElementById('nrfq-inland').checked,
     additionalInfo:document.getElementById('nrfq-addl').value.trim(),
-    status:'Draft'
+    status:'Draft',
+    _powerAppsId: new Date().toISOString()
   };
 
   if(editingRFQ){
@@ -875,9 +878,9 @@ async function saveRFQFromModal(){
       closeModal();renderPOInfo();renderDash();renderRequestsTable();showToast('RFQ updated');
     } else showToast('Error: '+result.error);
   } else {
-    const result=await apiPost({action:'saveRFQ',...payload});
+    const result=await apiPost({action:'saveRFQ',...payload,_powerAppsId:payload._powerAppsId});
     if(result.status==='created'){
-      rfqs.unshift({PO_Number:po,Requestor:payload.requestor,Ready_Date:payload.readyDate,Origin_Port:origin,Destination_Port:dest,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland,Additional_Info:payload.additionalInfo,Status:'Draft',Created:new Date().toISOString()});
+      rfqs.unshift({PO_Number:po,Requestor:payload.requestor,Ready_Date:payload.readyDate,Origin_Port:origin,Destination_Port:dest,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland,Additional_Info:payload.additionalInfo,Status:'Draft','_PowerAppsId':new Date().toISOString()});
       closeModal();renderDash();renderRequestsTable();showToast('RFQ saved — PO '+po);
     } else showToast('Error: '+(result.error||'unknown'));
   }
