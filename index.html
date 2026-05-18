@@ -17,7 +17,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13px;}
-/* FIX 11: ensure scroll works on all pages */
 .app{display:flex;height:100vh;overflow:hidden;}
 .sidebar{width:200px;min-width:200px;background:var(--sb);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
 .logo-area{padding:1.1rem 1.25rem;border-bottom:0.5px solid rgba(255,255,255,0.08);}
@@ -34,7 +33,6 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .topbar{background:var(--white);border-bottom:0.5px solid var(--bbd);padding:0.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .page-title{font-size:14px;font-weight:500;color:var(--bn);}
 .page-sub{font-size:11px;color:var(--bt-muted);margin-top:1px;}
-/* FIX 11: content always scrollable */
 .content{padding:1rem 1.25rem;flex:1;overflow-y:auto;overflow-x:hidden;}
 .page-wrap{display:flex;flex-direction:column;height:100%;overflow:hidden;}
 .btn{font-size:11.5px;padding:5px 12px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt-mid);cursor:pointer;font-family:var(--font);transition:all 0.12s;}
@@ -55,18 +53,38 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .panel{background:var(--white);border-radius:10px;border:0.5px solid var(--bbd);margin-bottom:10px;}
 .panel-header{padding:0.75rem 1.25rem;border-bottom:0.5px solid var(--bbd);display:flex;align-items:center;justify-content:space-between;}
 .panel-title{font-size:12.5px;font-weight:500;color:var(--bn);}
+/* Dashboard status buckets */
+.bucket{background:var(--white);border-radius:10px;border:0.5px solid var(--bbd);margin-bottom:12px;overflow:hidden;}
+.bucket-header{padding:0.75rem 1.25rem;border-bottom:0.5px solid var(--bbd);display:flex;align-items:center;justify-content:space-between;background:var(--bn-faint);}
+.bucket-title{font-size:12.5px;font-weight:500;color:var(--bn);}
+.bucket-count{font-size:11px;color:var(--bt-muted);}
+.bucket-sent .bucket-header{background:var(--ba-light);}
+.bucket-sent .bucket-title{color:var(--ba);}
+.bucket-received .bucket-header{background:var(--bg-light);}
+.bucket-received .bucket-title{color:var(--bg-dark);}
+.bucket-approval .bucket-header{background:#F3EDFC;}
+.bucket-approval .bucket-title{color:#6B21A8;}
+.bucket-awarded .bucket-header{background:var(--bn-light);}
+.bucket-awarded .bucket-title{color:var(--bn);}
 .tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
 .tbl th{padding:7px 10px;text-align:left;font-size:10px;color:var(--bt-muted);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;border-bottom:0.5px solid var(--bbd);white-space:nowrap;background:var(--bn-faint);}
 .tbl td{padding:8px 10px;border-bottom:0.5px solid var(--bbd);color:var(--bt);vertical-align:middle;white-space:nowrap;}
 .tbl tr:last-child td{border-bottom:none;}
 .tbl tr.clickable:hover td{background:var(--bn-faint);cursor:pointer;}
 .badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;display:inline-block;white-space:nowrap;}
-.b-draft{background:#F0F0EE;color:#555;}.b-sent{background:var(--ba-light);color:var(--ba);}
-.b-received{background:var(--bg-light);color:var(--bg-dark);}.b-awarded{background:var(--bn-light);color:var(--bn);}
-.b-urgent{background:var(--br-light);color:var(--br);}.b-yes{background:var(--bg-light);color:var(--bg-dark);}
-.b-no{background:#F0F0EE;color:#777;}.type-spot{background:var(--bg-light);color:var(--bg-dark);}
+.b-draft{background:#F0F0EE;color:#555;}
+.b-sent{background:var(--ba-light);color:var(--ba);}
+.b-received{background:var(--bg-light);color:var(--bg-dark);}
+.b-approval{background:#F3EDFC;color:#6B21A8;}
+.b-awarded{background:var(--bn-light);color:var(--bn);}
+.b-moved{background:#FEF3F2;color:#B42318;}
+.b-urgent{background:var(--br-light);color:var(--br);}
+.b-yes{background:var(--bg-light);color:var(--bg-dark);}
+.b-no{background:#F0F0EE;color:#777;}
+.type-spot{background:var(--bg-light);color:var(--bg-dark);}
 .type-contract{background:var(--bn-light);color:var(--bn);}
-.savings-pos{color:var(--bg-dark);font-weight:500;}.savings-neg{color:var(--br);font-weight:500;}
+.savings-pos{color:var(--bg-dark);font-weight:500;}
+.savings-neg{color:var(--br);font-weight:500;}
 .exp-valid{color:var(--bg-dark);font-weight:500;}.exp-soon{color:var(--ba);font-weight:500;}.exp-expired{color:var(--br);}
 .exp-bar{display:flex;align-items:center;gap:6px;}
 .exp-track{width:56px;height:5px;background:var(--surf);border-radius:3px;overflow:hidden;flex-shrink:0;border:0.5px solid var(--bbd);}
@@ -102,6 +120,17 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .form-field.full{grid-column:1/-1;}
 .rate-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:1rem;}
 .rate-toolbar select,.rate-toolbar input{font-size:11.5px;padding:5px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);}
+/* time tracking */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-row{display:flex;align-items:stretch;gap:12px;}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0;}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--bn-light);border:2px solid var(--bn);flex-shrink:0;margin-top:3px;}
+.tl-dot.reached{background:var(--bn);}
+.tl-line{flex:1;width:2px;background:var(--bn-light);margin:2px 0;}
+.tl-content{padding-bottom:14px;flex:1;}
+.tl-status{font-size:12px;font-weight:500;color:var(--bn);}
+.tl-time{font-size:11px;color:var(--bt-muted);margin-top:2px;}
+.tl-duration{font-size:11px;color:var(--bg-dark);margin-top:1px;}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:460px;background:var(--white);border-left:0.5px solid var(--bbd);display:flex;flex-direction:column;z-index:20;transform:translateX(100%);transition:transform 0.2s;box-shadow:-4px 0 24px rgba(0,0,0,0.08);}
 .drawer.open{transform:translateX(0);}
 .drawer-head{padding:1rem 1.25rem;border-bottom:0.5px solid var(--bbd);display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;background:var(--bn-faint);}
@@ -129,7 +158,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 .lane-group{background:var(--white);border:0.5px solid var(--bbd);border-radius:10px;margin-bottom:8px;overflow:hidden;}
 .lane-group-header{padding:0.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:var(--bn-faint);}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:50;display:flex;align-items:center;justify-content:center;}
-.modal{background:var(--white);border-radius:12px;width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.modal{background:var(--white);border-radius:12px;width:660px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
 .modal-head{padding:1.25rem 1.5rem;border-bottom:0.5px solid var(--bbd);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--white);z-index:1;}
 .modal-body{padding:1.25rem 1.5rem;}
 .modal-section{margin-bottom:1.25rem;}
@@ -199,24 +228,24 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
   <div class="content">
     <div class="kpi-grid">
       <div class="kpi"><div class="kpi-label">Open Requests</div><div class="kpi-value" id="kpi-open">—</div><div class="kpi-sub" id="kpi-open-sub">loading...</div></div>
-      <div class="kpi"><div class="kpi-label">Awaiting Quotes</div><div class="kpi-value kpi-warn" id="kpi-await">—</div><div class="kpi-sub">Pending carrier reply</div></div>
+      <div class="kpi"><div class="kpi-label">Awaiting Quotes</div><div class="kpi-value kpi-warn" id="kpi-await">—</div><div class="kpi-sub">Sent to carriers</div></div>
       <div class="kpi"><div class="kpi-label">Valid Rates on File</div><div class="kpi-value kpi-ok" id="kpi-rates">—</div><div class="kpi-sub" id="kpi-rates-sub">—</div></div>
       <div class="kpi"><div class="kpi-label">Expiring ≤ 7 Days</div><div class="kpi-value kpi-amber" id="kpi-expiring">—</div><div class="kpi-sub">Renewal needed</div></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 290px;gap:10px;">
-      <div class="panel">
-        <div class="panel-header"><span class="panel-title">Active requests</span><button class="btn btn-sm" onclick="nav('requests')">View all</button></div>
+      <div id="dash-buckets">
         <div id="dash-loading" class="loading"><div class="spinner"></div><div class="loading-text">Connecting to Google Sheets...</div></div>
-        <div style="overflow-x:auto;"><table class="tbl hidden" id="dash-table"><thead><tr><th>PO Number</th><th>Requestor</th><th>Route</th><th>Container</th><th>Status</th><th>Age</th><th>Savings</th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
       </div>
-      <div class="panel">
-        <div class="panel-header"><span class="panel-title">Alerts</span></div>
-        <div id="alerts-list"></div>
+      <div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Alerts</span></div>
+          <div id="alerts-list"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Rates expiring soon</span><button class="btn btn-sm" onclick="nav('rates')">View all</button></div>
+          <div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>Carrier</th><th>Route</th><th>Expires</th><th>Days</th></tr></thead><tbody id="dash-expiring-tbody"></tbody></table></div>
+        </div>
       </div>
-    </div>
-    <div class="panel">
-      <div class="panel-header"><span class="panel-title">Rates expiring soon</span><button class="btn btn-sm" onclick="nav('rates')">View rate library</button></div>
-      <div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>Carrier</th><th>Route</th><th>Container</th><th>Rate</th><th>Type</th><th>Expires</th><th>Days left</th></tr></thead><tbody id="dash-expiring-tbody"></tbody></table></div>
     </div>
   </div>
 </div>
@@ -224,17 +253,33 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 <!-- REQUESTS -->
 <div id="pg-requests" class="page-wrap hidden">
   <div class="topbar">
-    <div><div class="page-title">Quote Requests</div><div class="page-sub">Click any row to open PO detail</div></div>
+    <div><div class="page-title">Quote Requests</div><div class="page-sub">All RFQs — click any row to open detail</div></div>
     <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;">
-      <select class="btn" id="filter-status" onchange="renderRequestsTable()"><option value="">All statuses</option><option>Draft</option><option>Sent to Carriers</option><option>Quotes Received</option><option>Awarded</option></select>
-      <select class="btn" id="filter-container" onchange="renderRequestsTable()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
       <button class="btn btn-green" onclick="openNewRFQModal()">+ New RFQ</button>
     </div>
   </div>
   <div class="content">
+    <div class="rate-toolbar" id="req-filters">
+      <select class="btn" id="filter-status" onchange="renderRequestsTable()"><option value="">All statuses</option><option>Draft</option><option>Sent to Carriers</option><option>Quotes Received</option><option>Awaiting Approval</option><option>Awarded</option><option>Moved with Supplier</option></select>
+      <select class="btn" id="filter-container" onchange="renderRequestsTable()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
+      <select class="btn" id="filter-owner" onchange="renderRequestsTable()"><option value="">All owners</option><option>Frank O</option><option>Kyle R</option></select>
+      <select class="btn" id="filter-requestor" onchange="renderRequestsTable()"><option value="">All requestors</option></select>
+      <select class="btn" id="filter-origin" onchange="renderRequestsTable()"><option value="">All origins</option></select>
+      <select class="btn" id="filter-dest" onchange="renderRequestsTable()"><option value="">All destinations</option></select>
+      <select class="btn" id="filter-division" onchange="renderRequestsTable()"><option value="">All divisions</option></select>
+      <button class="btn" onclick="clearReqFilters()">Clear</button>
+    </div>
     <div id="req-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading requests...</div></div>
     <div class="panel hidden" id="req-panel" style="overflow-x:auto;">
-      <table class="tbl"><thead><tr><th>PO Number</th><th>Requestor</th><th>Ready Date</th><th>Origin</th><th>Destination</th><th>Container</th><th>Qty</th><th>Incoterm</th><th>Division</th><th>Urgent</th><th>Pri Transit</th><th>Direct Sail</th><th>Transship</th><th>Supplier Rate</th><th>Target Rate</th><th>Best Rate</th><th>Savings</th><th>Status</th><th>Age</th></tr></thead>
+      <table class="tbl"><thead><tr>
+        <th>PO Number</th><th>Owner</th><th>Requestor</th><th>Ready Date</th>
+        <th>Origin</th><th>Destination</th><th>Container</th><th>Qty</th>
+        <th>Incoterm</th><th>Division</th>
+        <th>Urgent</th><th>Pri Transit</th><th>Direct Sail</th><th>Transship</th>
+        <th>Supplier Rate</th><th>Target Rate</th><th>Best Rate</th>
+        <th>Savings vs Supplier</th><th>Savings vs Target</th>
+        <th>Status</th><th>Age</th>
+      </tr></thead>
       <tbody id="req-tbody"></tbody></table>
     </div>
   </div>
@@ -253,7 +298,9 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
         <option value="Draft">Draft</option>
         <option value="Sent to Carriers">Sent to Carriers</option>
         <option value="Quotes Received">Quotes Received</option>
+        <option value="Awaiting Approval">Awaiting Approval</option>
         <option value="Awarded">Awarded</option>
+        <option value="Moved with Supplier">Moved with Supplier</option>
       </select>
       <button class="btn btn-edit btn-sm" onclick="openEditRFQModal()">✏ Edit RFQ</button>
     </div>
@@ -276,7 +323,12 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
         </div>
         <div class="detail-card hidden" id="po-rate-summary-card">
           <div class="detail-card-header"><span class="detail-card-title">Rate summary</span></div>
-          <div class="detail-card-body"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="po-rate-summary-grid"></div></div>
+          <div class="detail-card-body"><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;" id="po-rate-summary-grid"></div></div>
+        </div>
+        <!-- TIME TRACKING -->
+        <div class="detail-card">
+          <div class="detail-card-header"><span class="detail-card-title">Status timeline</span></div>
+          <div class="detail-card-body"><div id="po-timeline"></div></div>
         </div>
       </div>
       <div>
@@ -324,7 +376,6 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
       <select id="rl-type" onchange="renderRateLibrary()"><option value="">Spot & Contract</option><option value="Spot">Spot only</option><option value="Contract">Contract only</option></select>
       <select id="rl-carrier" onchange="renderRateLibrary()"><option value="">All carriers</option></select>
       <select id="rl-container" onchange="renderRateLibrary()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
-      <!-- FIX 6: origin and destination filters -->
       <select id="rl-origin" onchange="renderRateLibrary()"><option value="">All origins</option></select>
       <select id="rl-dest" onchange="renderRateLibrary()"><option value="">All destinations</option></select>
       <select id="rl-validity" onchange="renderRateLibrary()"><option value="">All validity</option><option value="valid">Valid only</option><option value="soon">Expiring ≤ 7d</option><option value="expired">Expired</option></select>
@@ -351,7 +402,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
   </div>
   <div class="content">
     <div class="rate-toolbar">
-      <select id="a-status" onchange="updateAnalytics()"><option value="">All statuses</option><option>Draft</option><option>Sent to Carriers</option><option>Quotes Received</option><option>Awarded</option></select>
+      <select id="a-status" onchange="updateAnalytics()"><option value="">All statuses</option><option>Draft</option><option>Sent to Carriers</option><option>Quotes Received</option><option>Awaiting Approval</option><option>Awarded</option><option>Moved with Supplier</option></select>
       <select id="a-container" onchange="updateAnalytics()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
       <select id="a-division" onchange="updateAnalytics()"><option value="">All divisions</option></select>
       <input type="text" id="a-search" placeholder="Search PO, route..." oninput="updateAnalytics()" style="min-width:180px;">
@@ -363,7 +414,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
       <div class="panel"><div class="panel-header"><span class="panel-title">Quotes by carrier</span></div><div style="padding:0.875rem 1.25rem;"><div class="chart-bar-wrap" id="carrier-chart"></div></div></div>
     </div>
     <div class="panel"><div class="panel-header"><span class="panel-title">Filtered data</span><span id="filtered-count" style="font-size:11px;color:var(--bt-muted);"></span></div>
-      <div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>PO Number</th><th>Requestor</th><th>Route</th><th>Container</th><th>Division</th><th>Incoterm</th><th>Supplier Rate</th><th>Best Rate</th><th>Savings $</th><th>Savings %</th><th>Status</th></tr></thead><tbody id="analytics-tbody"></tbody></table></div>
+      <div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>PO Number</th><th>Owner</th><th>Requestor</th><th>Route</th><th>Container</th><th>Division</th><th>Incoterm</th><th>Supplier Rate</th><th>Target Rate</th><th>Best Rate</th><th>Savings vs Supplier</th><th>Savings vs Target</th><th>Status</th></tr></thead><tbody id="analytics-tbody"></tbody></table></div>
     </div>
   </div>
 </div>
@@ -400,14 +451,17 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
         <div class="modal-section-title">Shipment details</div>
         <div class="modal-grid">
           <div class="modal-field"><label>PO Number *</label><input type="text" id="nrfq-po" placeholder="e.g. PO12346"></div>
-          <div class="modal-field"><label>Requestor *</label><input type="text" id="nrfq-requestor" placeholder="e.g. Frank O"></div>
+          <div class="modal-field"><label>Requestor</label><input type="text" id="nrfq-requestor" placeholder="e.g. Frank O"></div>
+          <div class="modal-field"><label>Owner</label>
+            <select id="nrfq-owner"><option value="">— Select owner —</option><option>Frank O</option><option>Kyle R</option></select>
+          </div>
           <div class="modal-field"><label>Ready Date</label><input type="text" id="nrfq-date" placeholder="MM/DD/YY"></div>
           <div class="modal-field"><label>Port of Origin *</label><input type="text" id="nrfq-origin" placeholder="e.g. Santos, Brazil"></div>
           <div class="modal-field"><label>Port of Destination *</label><input type="text" id="nrfq-dest" placeholder="e.g. New York, USA"></div>
           <div class="modal-field"><label>Container Type</label>
             <select id="nrfq-container"><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
           </div>
-          <div class="modal-field"><label>Quantity</label><input type="number" id="nrfq-qty" placeholder="1" value="1" min="1"></div>
+          <div class="modal-field"><label>Quantity</label><input type="number" id="nrfq-qty" value="1" min="1"></div>
           <div class="modal-field"><label>Transit Days</label><input type="number" id="nrfq-transit" placeholder="e.g. 30"></div>
           <div class="modal-field"><label>Incoterm</label>
             <select id="nrfq-incoterm"><option>FOB</option><option>CIF</option><option>EXW</option><option>DDP</option><option>CFR</option></select>
@@ -445,11 +499,18 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 
 <script>
 // ── CONFIG ─────────────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbzb2H20sok3uFI2gzZpPfIIthzZZIN1y4KhmQ3v1xx4cxa5wyZlkenXyCFLdUvqOn0/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxzJ1kAofclGoK3vK9BWur7wx39KkUiZwbykmRHp1d51Re8Owe8pwCy34TL9pDOTZs/exec';
 // ──────────────────────────────────────────────────────────────────
 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 let rfqs=[], quotes=[], rates=[], currentRFQ=null, editingRFQ=false;
+
+// All statuses in order
+const ALL_STATUSES = ['Draft','Sent to Carriers','Quotes Received','Awaiting Approval','Awarded','Moved with Supplier'];
+// Dashboard buckets — excludes Draft and Moved with Supplier
+const DASH_BUCKETS = ['Sent to Carriers','Quotes Received','Awaiting Approval','Awarded'];
+// Hidden from dashboard
+const DASH_HIDDEN = ['Draft','Moved with Supplier'];
 
 // ── API ────────────────────────────────────────────────────────────
 async function apiGet(action,params={}){
@@ -478,74 +539,176 @@ function fmtDate(ds){
   const d=new Date(ds);if(isNaN(d.getTime()))return String(ds);
   return(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')+'/'+d.getFullYear().toString().slice(-2);
 }
+function fmtDateTime(ds){
+  if(!ds)return'—';
+  const d=new Date(ds);if(isNaN(d.getTime()))return'—';
+  return fmtDate(ds)+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
 function dF(ds){if(!ds)return null;const d=new Date(ds);d.setHours(0,0,0,0);return Math.round((d-TODAY)/86400000);}
 function eC(d){return d<0?'exp-expired':d<=7?'exp-soon':'exp-valid';}
 function eL(d){return d<0?'Expired':d===0?'Today':d+' days';}
 function eBar(days,total){const pct=Math.max(0,Math.min(100,(days/Math.max(total,1))*100));const col=days<0?'#C0392B':days<=7?'#D4860A':'#4A9B3F';return`<div class="exp-bar"><div class="exp-track"><div class="exp-fill" style="width:${pct.toFixed(0)}%;background:${col};"></div></div></div>`;}
-const sbm={'Draft':'b-draft','Sent to Carriers':'b-sent','Quotes Received':'b-received','Awarded':'b-awarded'};
+
+const sbm={
+  'Draft':'b-draft','Sent to Carriers':'b-sent','Quotes Received':'b-received',
+  'Awaiting Approval':'b-approval','Awarded':'b-awarded','Moved with Supplier':'b-moved'
+};
+
 function bool(v){return v===true||v==='TRUE'||v==='true'||v===1||v==='1';}
+function quotesForRFQ(po){return quotes.filter(q=>String(q.RFQ_ID)===String(po));}
+function bestR(po){const rq=quotesForRFQ(po);if(!rq.length)return null;const rs=rq.map(q=>parseFloat(q.Rate)).filter(r=>!isNaN(r));return rs.length?Math.min(...rs):null;}
 
-// FIX 12: quotes keyed by RFQ_ID which stores PO_Number — handle type mismatch
-function quotesForRFQ(poNumber){return quotes.filter(q=>String(q.RFQ_ID)===String(poNumber));}
-function bestR(poNumber){const rq=quotesForRFQ(poNumber);if(!rq.length)return null;const rates=rq.map(q=>parseFloat(q.Rate)).filter(r=>!isNaN(r));return rates.length?Math.min(...rates):null;}
-function sv(rfq){const b=bestR(rfq.PO_Number);return b!==null?parseFloat(rfq.Supplier_Rate)-b:null;}
-function svP(rfq){const s=sv(rfq);return s!==null?((s/parseFloat(rfq.Supplier_Rate))*100).toFixed(1):null;}
-function fSv(rfq){const s=sv(rfq);if(s===null)return'<span style="color:var(--bt-faint)">—</span>';const cls=s>=0?'savings-pos':'savings-neg';return`<span class="${cls}">${s>=0?'-':'+'}$${Math.abs(s).toLocaleString()} (${Math.abs(svP(rfq))}%)</span>`;}
+// Savings vs Supplier
+function svSupplier(rfq){const b=bestR(rfq.PO_Number);return b!==null?parseFloat(rfq.Supplier_Rate)-b:null;}
+function svSupplierP(rfq){const s=svSupplier(rfq);return s!==null&&parseFloat(rfq.Supplier_Rate)?((s/parseFloat(rfq.Supplier_Rate))*100).toFixed(1):null;}
 
-// Age — uses _PowerAppsId column as created timestamp (written by app on save, or by Power Automate)
+// Savings vs Target
+function svTarget(rfq){const b=bestR(rfq.PO_Number);return b!==null&&parseFloat(rfq.Target_Rate||0)?parseFloat(rfq.Target_Rate)-b:null;}
+function svTargetP(rfq){const s=svTarget(rfq);return s!==null&&parseFloat(rfq.Target_Rate||0)?((s/parseFloat(rfq.Target_Rate))*100).toFixed(1):null;}
+
+function fmtSv(val,pct){
+  if(val===null)return'<span style="color:var(--bt-faint)">—</span>';
+  const cls=val>=0?'savings-pos':'savings-neg';
+  return`<span class="${cls}">${val>=0?'-':'+'}$${Math.abs(val).toLocaleString()}${pct!==null?' ('+Math.abs(pct)+'%)':''}</span>`;
+}
+
+// Age — reads _PowerAppsId field written on creation
 function age(rfq){
-  const ts = rfq['_PowerAppsId'] || rfq['Created'] || '';
+  const ts=rfq['_PowerAppsId']||rfq['Created']||'';
   if(!ts)return'—';
-  const d=new Date(ts);
-  if(isNaN(d.getTime()))return'—';
-  const diffMs = Date.now()-d.getTime();
-  const diffDays = Math.floor(diffMs/86400000);
-  if(diffDays===0){
-    const hrs=Math.floor(diffMs/3600000);
-    return hrs===0?'<1h':hrs+'h';
-  }
+  const d=new Date(ts);if(isNaN(d.getTime()))return'—';
+  const diffMs=Date.now()-d.getTime();
+  const diffDays=Math.floor(diffMs/86400000);
+  if(diffDays===0){const hrs=Math.floor(diffMs/3600000);return hrs===0?'<1h':hrs+'h';}
   return diffDays+'d';
 }
 function route(q){return`${q.Origin_Port||'?'} → ${q.Destination_Port||'?'}`;}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 
+// ── TIME TRACKING ──────────────────────────────────────────────────
+const STATUS_TS_MAP = {
+  'Draft':               'Timestamp_Draft',
+  'Sent to Carriers':    'Timestamp_Sent',
+  'Quotes Received':     'Timestamp_Quotes_Received',
+  'Awaiting Approval':   'Timestamp_Awaiting_Approval',
+  'Awarded':             'Timestamp_Awarded',
+  'Moved with Supplier': 'Timestamp_Moved_Supplier'
+};
+
+function diffLabel(ms){
+  if(ms<0)return'—';
+  const hrs=Math.floor(ms/3600000);
+  if(hrs<24)return hrs+'h';
+  const days=Math.floor(ms/86400000);
+  return days+'d '+Math.floor((ms%86400000)/3600000)+'h';
+}
+
+function renderTimeline(rfq){
+  const statuses=ALL_STATUSES;
+  const rows=[];
+  for(let i=0;i<statuses.length;i++){
+    const s=statuses[i];
+    const tsKey=STATUS_TS_MAP[s];
+    const ts=rfq[tsKey];
+    const reached=!!ts;
+    // time spent in this status = next status timestamp - this status timestamp
+    let duration=null;
+    if(reached){
+      // find next reached status
+      for(let j=i+1;j<statuses.length;j++){
+        const nextTs=rfq[STATUS_TS_MAP[statuses[j]]];
+        if(nextTs){
+          duration=new Date(nextTs)-new Date(ts);
+          break;
+        }
+      }
+      // if current status, duration = now - ts
+      if(duration===null&&rfq.Status===s) duration=Date.now()-new Date(ts).getTime();
+    }
+    const isLast=i===statuses.length-1;
+    rows.push(`
+      <div class="tl-row">
+        <div class="tl-left">
+          <div class="tl-dot ${reached?'reached':''}"></div>
+          ${!isLast?'<div class="tl-line"></div>':''}
+        </div>
+        <div class="tl-content">
+          <div class="tl-status" style="color:${reached?'var(--bn)':'var(--bt-faint)'}">${s}</div>
+          ${reached?`<div class="tl-time">${fmtDateTime(ts)}</div>`:'<div class="tl-time" style="color:var(--bt-faint)">Not yet reached</div>'}
+          ${duration!==null?`<div class="tl-duration">Time in status: ${diffLabel(duration)}</div>`:''}
+        </div>
+      </div>`);
+  }
+  return rows.join('');
+}
+
 // ── DASHBOARD ──────────────────────────────────────────────────────
 function renderDash(){
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const open=rfqs.filter(r=>r.Status!=='Awarded');
+  const open=rfqs.filter(r=>!DASH_HIDDEN.includes(r.Status));
   const awaiting=rfqs.filter(r=>r.Status==='Sent to Carriers');
   const validRates=rates.filter(r=>dF(r.Valid_Until)>=0);
   const soonRates=rates.filter(r=>{const d=dF(r.Valid_Until);return d!==null&&d>=0&&d<=7;});
   document.getElementById('kpi-open').textContent=open.length;
-  document.getElementById('kpi-open-sub').textContent=awaiting.length+' awaiting quotes';
+  document.getElementById('kpi-open-sub').textContent=open.length+' active';
   document.getElementById('kpi-await').textContent=awaiting.length;
   document.getElementById('kpi-rates').textContent=validRates.length;
   document.getElementById('kpi-rates-sub').textContent=rates.length+' total in library';
   document.getElementById('kpi-expiring').textContent=soonRates.length;
   document.getElementById('expiry-badge').textContent=soonRates.length||'';
-  document.getElementById('req-badge').textContent=rfqs.filter(r=>r.Status==='Quotes Received').length||'';
+  document.getElementById('req-badge').textContent=rfqs.filter(r=>r.Status==='Quotes Received'||r.Status==='Awaiting Approval').length||'';
+
   document.getElementById('dash-loading').classList.add('hidden');
-  document.getElementById('dash-table').classList.remove('hidden');
-  document.getElementById('dash-tbody').innerHTML=rfqs.filter(q=>q.Status!=='Awarded').slice(0,8).map(q=>`
-    <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
-      <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
-      <td>${q.Requestor||'—'}</td>
-      <td>${route(q)}</td><td>${q.Container_Type}</td>
-      <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
-      <td>${age(q)}</td><td>${fSv(q)}</td>
-    </tr>`).join('');
+
+  // Buckets
+  const bucketColors={
+    'Sent to Carriers':'bucket-sent',
+    'Quotes Received':'bucket-received',
+    'Awaiting Approval':'bucket-approval',
+    'Awarded':'bucket-awarded'
+  };
+  let bucketsHtml='';
+  DASH_BUCKETS.forEach(status=>{
+    const items=rfqs.filter(r=>r.Status===status);
+    if(!items.length)return;
+    bucketsHtml+=`
+      <div class="bucket ${bucketColors[status]||''}">
+        <div class="bucket-header">
+          <span class="bucket-title">${status}</span>
+          <span class="bucket-count">${items.length} RFQ${items.length!==1?'s':''}</span>
+        </div>
+        <div style="overflow-x:auto;">
+        <table class="tbl"><thead><tr><th>PO Number</th><th>Owner</th><th>Requestor</th><th>Route</th><th>Container</th><th>Age</th><th>Savings vs Supplier</th></tr></thead>
+        <tbody>${items.map(q=>`
+          <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
+            <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
+            <td>${q.Owner||'—'}</td>
+            <td>${q.Requestor||'—'}</td>
+            <td>${route(q)}</td>
+            <td>${q.Container_Type}</td>
+            <td>${age(q)}</td>
+            <td>${fmtSv(svSupplier(q),svSupplierP(q))}</td>
+          </tr>`).join('')}
+        </tbody></table></div>
+      </div>`;
+  });
+  document.getElementById('dash-buckets').innerHTML=bucketsHtml||'<div style="padding:2rem;text-align:center;color:var(--bt-faint)">No active RFQs</div>';
+
+  // Expiring rates
   const expiring=rates.filter(r=>{const d=dF(r.Valid_Until);return d!==null&&d>=0&&d<=10;}).sort((a,b)=>dF(a.Valid_Until)-dF(b.Valid_Until));
-  document.getElementById('dash-expiring-tbody').innerHTML=expiring.map(r=>{const d=dF(r.Valid_Until);return`
+  document.getElementById('dash-expiring-tbody').innerHTML=expiring.slice(0,5).map(r=>{const d=dF(r.Valid_Until);return`
     <tr class="clickable" onclick="openRateDrawer('${r.Rate_ID}')">
       <td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td>
-      <td>${r.Origin_Port||'?'} → ${r.Destination_Port||'?'}</td>
-      <td>${r.Container_Type}</td><td style="font-weight:500">$${parseFloat(r.Rate||0).toLocaleString()}</td>
-      <td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td>
-      <td>${fmtDate(r.Valid_Until)}</td><td><span class="${eC(d)}">${eL(d)}</span></td>
+      <td>${(r.Origin_Port||'').split(',')[0]}→${(r.Destination_Port||'').split(',')[0]}</td>
+      <td>${fmtDate(r.Valid_Until)}</td>
+      <td><span class="${eC(d)}">${eL(d)}</span></td>
     </tr>`;}).join('');
+
+  // Alerts
   const alerts=[];
-  rfqs.filter(r=>r.Status==='Quotes Received').forEach(r=>alerts.push({dot:'var(--br)',text:`${r.PO_Number} — Quotes received, awaiting award.`}));
-  soonRates.forEach(r=>alerts.push({dot:'var(--ba)',text:`${r.Carrier_Name} rate expires in ${dF(r.Valid_Until)}d — ${r.Origin_Port||'?'}→${r.Destination_Port||'?'}.`}));
+  rfqs.filter(r=>r.Status==='Quotes Received').forEach(r=>alerts.push({dot:'var(--br)',text:`${r.PO_Number} — Quotes received, awaiting decision.`}));
+  rfqs.filter(r=>r.Status==='Awaiting Approval').forEach(r=>alerts.push({dot:'#6B21A8',text:`${r.PO_Number} — Awaiting approval.`}));
+  soonRates.forEach(r=>alerts.push({dot:'var(--ba)',text:`${r.Carrier_Name} rate expires in ${dF(r.Valid_Until)}d.`}));
   document.getElementById('alerts-list').innerHTML=(alerts.length?alerts:[{dot:'var(--bg)',text:'No alerts — all caught up!'}]).slice(0,6).map(a=>`
     <div style="display:flex;gap:9px;padding:0.625rem 1.25rem;border-bottom:0.5px solid var(--bbd);">
       <div style="width:7px;height:7px;border-radius:50%;background:${a.dot};margin-top:4px;flex-shrink:0;"></div>
@@ -554,20 +717,42 @@ function renderDash(){
 }
 
 // ── REQUESTS TABLE ─────────────────────────────────────────────────
+function populateReqFilters(){
+  const requestors=[...new Set(rfqs.map(r=>r.Requestor).filter(Boolean))].sort();
+  const origins=[...new Set(rfqs.map(r=>r.Origin_Port).filter(Boolean))].sort();
+  const dests=[...new Set(rfqs.map(r=>r.Destination_Port).filter(Boolean))].sort();
+  const divs=[...new Set(rfqs.map(r=>r.Division).filter(Boolean))].sort();
+  [['filter-requestor',requestors],['filter-origin',origins],['filter-dest',dests],['filter-division',divs]].forEach(([id,vals])=>{
+    const sel=document.getElementById(id);
+    while(sel.options.length>1)sel.remove(1);
+    vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
+  });
+}
+
 function renderRequestsTable(){
   const fs=document.getElementById('filter-status').value;
   const fc=document.getElementById('filter-container').value;
-  const filtered=rfqs.filter(q=>(!fs||q.Status===fs)&&(!fc||q.Container_Type===fc));
+  const fo=document.getElementById('filter-owner').value;
+  const freq=document.getElementById('filter-requestor').value;
+  const forig=document.getElementById('filter-origin').value;
+  const fdest=document.getElementById('filter-dest').value;
+  const fdiv=document.getElementById('filter-division').value;
+  const filtered=rfqs.filter(q=>
+    (!fs||q.Status===fs)&&(!fc||q.Container_Type===fc)&&
+    (!fo||q.Owner===fo)&&(!freq||q.Requestor===freq)&&
+    (!forig||q.Origin_Port===forig)&&(!fdest||q.Destination_Port===fdest)&&
+    (!fdiv||q.Division===fdiv));
   document.getElementById('req-loading').classList.add('hidden');
   document.getElementById('req-panel').classList.remove('hidden');
   document.getElementById('req-tbody').innerHTML=filtered.map(q=>`
     <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
       <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
+      <td>${q.Owner||'—'}</td>
       <td>${q.Requestor||'—'}</td>
       <td>${fmtDate(q.Ready_Date)}</td>
-      <td>${q.Origin_Port}</td><td>${q.Destination_Port}</td>
+      <td>${q.Origin_Port||'—'}</td><td>${q.Destination_Port||'—'}</td>
       <td>${q.Container_Type}</td><td style="text-align:center">${q.Quantity||1}</td>
-      <td>${q.Incoterm}</td><td>${q.Division}</td>
+      <td>${q.Incoterm}</td><td>${q.Division||'—'}</td>
       <td><span class="badge ${bool(q.Cond_Urgent)?'b-urgent':'b-no'}">${bool(q.Cond_Urgent)?'Yes':'No'}</span></td>
       <td><span class="badge ${bool(q.Cond_Priority_Transit)?'b-yes':'b-no'}">${bool(q.Cond_Priority_Transit)?'Yes':'No'}</span></td>
       <td><span class="badge ${bool(q.Cond_Direct_Sailing)?'b-yes':'b-no'}">${bool(q.Cond_Direct_Sailing)?'Yes':'No'}</span></td>
@@ -575,11 +760,13 @@ function renderRequestsTable(){
       <td>$${parseFloat(q.Supplier_Rate||0).toLocaleString()}</td>
       <td>$${parseFloat(q.Target_Rate||0).toLocaleString()}</td>
       <td>${bestR(q.PO_Number)!==null?'$'+bestR(q.PO_Number).toLocaleString():'<span style="color:var(--bt-faint)">Pending</span>'}</td>
-      <td>${fSv(q)}</td>
+      <td>${fmtSv(svSupplier(q),svSupplierP(q))}</td>
+      <td>${fmtSv(svTarget(q),svTargetP(q))}</td>
       <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
       <td>${age(q)}</td>
     </tr>`).join('');
 }
+function clearReqFilters(){['filter-status','filter-container','filter-owner','filter-requestor','filter-origin','filter-dest','filter-division'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});renderRequestsTable();}
 
 // ── PO DETAIL ──────────────────────────────────────────────────────
 async function openPODetail(poNumber){
@@ -589,19 +776,14 @@ async function openPODetail(poNumber){
   document.getElementById('po-loading').classList.remove('hidden');
   document.getElementById('po-content').classList.add('hidden');
   document.getElementById('po-title').textContent=currentRFQ.PO_Number;
-  document.getElementById('po-sub').textContent=route(currentRFQ)+' · '+currentRFQ.Container_Type+(currentRFQ.Requestor?' · '+currentRFQ.Requestor:'');
+  document.getElementById('po-sub').textContent=route(currentRFQ)+' · '+currentRFQ.Container_Type+(currentRFQ.Owner?' · '+currentRFQ.Owner:'');
   document.getElementById('po-status-badge').innerHTML=`<span class="badge ${sbm[currentRFQ.Status]||'b-draft'}">${currentRFQ.Status}</span>`;
   document.getElementById('po-status-select').value=currentRFQ.Status||'Draft';
-
-  // FIX 12: load quotes and match by PO_Number string comparison
-  const loadedQuotes = await apiGet('getQuotes',{rfqId:String(poNumber)});
-  // Merge into global quotes array for this RFQ
-  quotes = quotes.filter(q=>String(q.RFQ_ID)!==String(poNumber));
-  quotes.push(...(Array.isArray(loadedQuotes)?loadedQuotes:[]));
-
-  renderPOInfo();
-  renderCarrierCards();
-  renderRateSummary();
+  const loaded=await apiGet('getQuotes',{rfqId:String(poNumber)});
+  quotes=quotes.filter(q=>String(q.RFQ_ID)!==String(poNumber));
+  quotes.push(...(Array.isArray(loaded)?loaded:[]));
+  renderPOInfo();renderCarrierCards();renderRateSummary();
+  document.getElementById('po-timeline').innerHTML=renderTimeline(currentRFQ);
   document.getElementById('po-loading').classList.add('hidden');
   document.getElementById('po-content').classList.remove('hidden');
 }
@@ -609,47 +791,35 @@ async function openPODetail(poNumber){
 function renderPOInfo(){
   if(!currentRFQ)return;
   const fields=[
-    ['PO Number',currentRFQ.PO_Number],['Requestor',currentRFQ.Requestor||'—'],
-    ['Ready Date',fmtDate(currentRFQ.Ready_Date)],['Status',currentRFQ.Status],
+    ['PO Number',currentRFQ.PO_Number],['Owner',currentRFQ.Owner||'—'],
+    ['Requestor',currentRFQ.Requestor||'—'],['Ready Date',fmtDate(currentRFQ.Ready_Date)],
     ['Origin Port',currentRFQ.Origin_Port],['Destination Port',currentRFQ.Destination_Port],
     ['Container Type',currentRFQ.Container_Type],['Quantity',(currentRFQ.Quantity||1)+' container(s)'],
     ['Transit (days)',currentRFQ.Transit_Days||'—'],['Incoterm',currentRFQ.Incoterm],
-    ['Division',currentRFQ.Division],['Supplier Rate','$'+parseFloat(currentRFQ.Supplier_Rate||0).toLocaleString()],
+    ['Division',currentRFQ.Division||'—'],['Supplier Rate','$'+parseFloat(currentRFQ.Supplier_Rate||0).toLocaleString()],
     ['Target Rate','$'+parseFloat(currentRFQ.Target_Rate||0).toLocaleString()],['Age',age(currentRFQ)]
   ];
   document.getElementById('po-info-grid').innerHTML=fields.map(([l,v])=>`<div class="info-field"><label>${l}</label><span>${v||'—'}</span></div>`).join('');
-  const conds=[
-    ['Rate needed urgently (24h)',currentRFQ.Cond_Urgent],
-    ['Prioritize transit over cost',currentRFQ.Cond_Priority_Transit],
-    ['Prioritize cost over transit',currentRFQ.Cond_Priority_Cost],
-    ['Direct sailing if available',currentRFQ.Cond_Direct_Sailing],
-    ['Transshipping allowed',currentRFQ.Cond_Transshipping],
-    ['Genset needed',currentRFQ.Cond_Genset],
-    ['Origin inland rates needed',currentRFQ.Cond_Origin_Inland]
-  ];
+  const conds=[['Rate needed urgently (24h)',currentRFQ.Cond_Urgent],['Prioritize transit over cost',currentRFQ.Cond_Priority_Transit],['Prioritize cost over transit',currentRFQ.Cond_Priority_Cost],['Direct sailing if available',currentRFQ.Cond_Direct_Sailing],['Transshipping allowed',currentRFQ.Cond_Transshipping],['Genset needed',currentRFQ.Cond_Genset],['Origin inland rates needed',currentRFQ.Cond_Origin_Inland]];
   document.getElementById('po-cond-grid').innerHTML=conds.map(([k,v])=>`<div class="cond-item"><div class="cond-check ${bool(v)?'on':''}"></div>${k}</div>`).join('');
   const addlCard=document.getElementById('po-addl-card');
   if(currentRFQ.Additional_Info){addlCard.classList.remove('hidden');document.getElementById('po-addl-text').textContent=currentRFQ.Additional_Info;}
   else addlCard.classList.add('hidden');
 }
 
-// FIX 12: render carrier cards using quotesForRFQ
 function renderCarrierCards(){
   if(!currentRFQ)return;
   const rfqQuotes=quotesForRFQ(currentRFQ.PO_Number);
   const sorted=[...rfqQuotes].sort((a,b)=>parseFloat(a.Rate||9999)-parseFloat(b.Rate||9999));
   document.getElementById('po-quotes-count').textContent=sorted.length+' quote'+(sorted.length!==1?'s':'')+' received';
-  if(!sorted.length){
-    document.getElementById('po-carrier-cards').innerHTML='<div style="font-size:12px;color:var(--bt-faint);padding:8px 0;">No quotes yet. Use the form below to add carrier responses.</div>';
-    return;
-  }
+  if(!sorted.length){document.getElementById('po-carrier-cards').innerHTML='<div style="font-size:12px;color:var(--bt-faint);padding:8px 0;">No quotes yet. Use the form below.</div>';return;}
   document.getElementById('po-carrier-cards').innerHTML=sorted.map((c,i)=>{
     const awarded=bool(c.Is_Awarded);
     const rate=parseFloat(c.Rate||0);
     const suppRate=parseFloat(currentRFQ.Supplier_Rate||0);
-    const diff=rate-suppRate;
-    const vsColor=diff<=0?'var(--bg-dark)':'var(--br)';
-    const vsLabel=diff<=0?`-$${Math.abs(diff).toLocaleString()} vs supplier`:`+$${Math.abs(diff).toLocaleString()} vs supplier`;
+    const targetRate=parseFloat(currentRFQ.Target_Rate||0);
+    const diffSupp=rate-suppRate;
+    const diffTarget=targetRate?rate-targetRate:null;
     return`<div class="carrier-card ${awarded?'awarded-card':i===0?'best':''}">
       <div class="carrier-rank-pill ${i===0?'rank-1':'rank-other'}">#${i+1}${i===0?' Best':''}</div>
       <div class="carrier-card-name">${c.Carrier_Name}${awarded?' <span class="badge b-awarded" style="font-size:9px;vertical-align:middle;">Awarded</span>':''}</div>
@@ -658,15 +828,15 @@ function renderCarrierCards(){
         <div class="carrier-stat"><label>Transit</label><span>${c.Transit_Days||'?'} days</span></div>
         ${c.Valid_Until?`<div class="carrier-stat"><label>Valid until</label><span class="${eC(dF(c.Valid_Until))}">${fmtDate(c.Valid_Until)}</span></div>`:''}
       </div>
-      ${c.Notes?`<div style="font-size:11px;color:var(--bt-muted);margin-bottom:8px;font-style:italic;">${c.Notes}</div>`:''}
-      <div style="font-size:11px;color:${vsColor};margin-bottom:8px;">${vsLabel}</div>
+      ${c.Notes?`<div style="font-size:11px;color:var(--bt-muted);margin-bottom:6px;font-style:italic;">${c.Notes}</div>`:''}
+      <div style="font-size:11px;margin-bottom:4px;color:${diffSupp<=0?'var(--bg-dark)':'var(--br)'}">vs Supplier: ${diffSupp<=0?'-':'+'}$${Math.abs(diffSupp).toLocaleString()}</div>
+      ${diffTarget!==null?`<div style="font-size:11px;margin-bottom:8px;color:${diffTarget<=0?'var(--bg-dark)':'var(--br)'}">vs Target: ${diffTarget<=0?'-':'+'}$${Math.abs(diffTarget).toLocaleString()}</div>`:''}
       <div style="display:flex;gap:7px;flex-wrap:wrap;">
         ${awarded?'<span style="font-size:11px;color:var(--bg-dark);font-weight:500;">✓ Awarded</span>':`<button class="btn btn-sm btn-green" onclick="awardCarrier('${c.Quote_ID}','${currentRFQ.PO_Number}')">Award</button>`}
         <button class="btn btn-edit" onclick="openEditQuoteDrawer('${c.Quote_ID}')">✏ Edit</button>
         <button class="btn btn-danger" onclick="removeQuote('${c.Quote_ID}')">Remove</button>
       </div>
-    </div>`;
-  }).join('');
+    </div>`;}).join('');
 }
 
 function renderRateSummary(){
@@ -675,12 +845,16 @@ function renderRateSummary(){
   const card=document.getElementById('po-rate-summary-card');
   if(best===null){card.classList.add('hidden');return;}
   card.classList.remove('hidden');
-  const s=parseFloat(currentRFQ.Supplier_Rate||0)-best;
-  const sp=((s/parseFloat(currentRFQ.Supplier_Rate||1))*100).toFixed(1);
+  const sSupp=parseFloat(currentRFQ.Supplier_Rate||0)-best;
+  const sSuppP=parseFloat(currentRFQ.Supplier_Rate||0)?((sSupp/parseFloat(currentRFQ.Supplier_Rate))*100).toFixed(1):null;
+  const tRate=parseFloat(currentRFQ.Target_Rate||0);
+  const sTarget=tRate?tRate-best:null;
+  const sTargetP=tRate?((sTarget/tRate)*100).toFixed(1):null;
   document.getElementById('po-rate-summary-grid').innerHTML=`
     <div class="kpi" style="margin:0"><div class="kpi-label">Supplier rate</div><div class="kpi-value" style="font-size:18px;">$${parseFloat(currentRFQ.Supplier_Rate||0).toLocaleString()}</div></div>
     <div class="kpi" style="margin:0"><div class="kpi-label">Best carrier rate</div><div class="kpi-value kpi-ok" style="font-size:18px;">$${best.toLocaleString()}</div></div>
-    <div class="kpi" style="margin:0"><div class="kpi-label">Savings</div><div class="kpi-value kpi-ok" style="font-size:18px;">${s>=0?'-':'+'}$${Math.abs(s).toLocaleString()}</div><div class="kpi-sub">${Math.abs(sp)}% ${s>=0?'below':'above'} supplier</div></div>`;
+    <div class="kpi" style="margin:0"><div class="kpi-label">Savings vs Supplier</div><div class="kpi-value ${sSupp>=0?'kpi-ok':'kpi-warn'}" style="font-size:16px;">${sSupp>=0?'-':'+'}$${Math.abs(sSupp).toLocaleString()}</div>${sSuppP!==null?`<div class="kpi-sub">${Math.abs(sSuppP)}% ${sSupp>=0?'below':'above'} supplier</div>`:''}</div>
+    <div class="kpi" style="margin:0"><div class="kpi-label">Savings vs Target</div><div class="kpi-value ${sTarget!==null&&sTarget>=0?'kpi-ok':'kpi-warn'}" style="font-size:16px;">${sTarget!==null?(sTarget>=0?'-':'+')+'$'+Math.abs(sTarget).toLocaleString():'—'}</div>${sTargetP!==null?`<div class="kpi-sub">${Math.abs(sTargetP)}% ${sTarget>=0?'below':'above'} target</div>`:''}</div>`;
 }
 
 async function updateStatusFromSelect(){
@@ -688,47 +862,50 @@ async function updateStatusFromSelect(){
   if(!currentRFQ||newStatus===currentRFQ.Status)return;
   const result=await apiPost({action:'updateStatus',rfqId:currentRFQ.PO_Number,status:newStatus});
   if(!result.error){
+    // Update local timestamps too
+    const tsKey=STATUS_TS_MAP[newStatus];
+    if(tsKey)currentRFQ[tsKey]=new Date().toISOString();
     currentRFQ.Status=newStatus;
     document.getElementById('po-status-badge').innerHTML=`<span class="badge ${sbm[newStatus]||'b-draft'}">${newStatus}</span>`;
     const rfq=rfqs.find(r=>String(r.PO_Number)===String(currentRFQ.PO_Number));
-    if(rfq)rfq.Status=newStatus;
+    if(rfq){rfq.Status=newStatus;if(tsKey)rfq[tsKey]=currentRFQ[tsKey];}
+    document.getElementById('po-timeline').innerHTML=renderTimeline(currentRFQ);
     renderDash();showToast('Status updated: '+newStatus);
   }
 }
 
-// FIX 9: Edit quote drawer
+// Timestamp column map (client-side)
+const STATUS_TS_MAP={
+  'Draft':'Timestamp_Draft','Sent to Carriers':'Timestamp_Sent',
+  'Quotes Received':'Timestamp_Quotes_Received','Awaiting Approval':'Timestamp_Awaiting_Approval',
+  'Awarded':'Timestamp_Awarded','Moved with Supplier':'Timestamp_Moved_Supplier'
+};
+
 function openEditQuoteDrawer(quoteId){
   const q=quotesForRFQ(currentRFQ.PO_Number).find(x=>String(x.Quote_ID)===String(quoteId));
   if(!q)return;
   document.getElementById('rd-title').textContent='Edit Quote';
   document.getElementById('rd-sub').textContent=q.Carrier_Name+' — '+currentRFQ.PO_Number;
-  document.getElementById('rd-body').innerHTML=`
-    <div class="dsec"><div class="dsec-title">Edit carrier quote</div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        ${[['Carrier Name','eq-carrier',q.Carrier_Name,'text'],['Rate (USD)','eq-rate',q.Rate,'number'],['Transit (days)','eq-transit',q.Transit_Days,'number'],['Valid Until (MM/DD/YY)','eq-valid',fmtDate(q.Valid_Until),'text'],['Notes','eq-notes',q.Notes,'text']].map(([l,id,val,t])=>`
-          <div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">${l}</div>
-          <input type="${t}" id="${id}" value="${val||''}" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);"></div>`).join('')}
-        <button class="btn btn-green" onclick="saveEditedQuote('${quoteId}')">Save changes</button>
-      </div>
-    </div>`;
+  document.getElementById('rd-body').innerHTML=`<div class="dsec"><div class="dsec-title">Edit carrier quote</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${[['Carrier Name','eq-carrier',q.Carrier_Name,'text'],['Rate (USD)','eq-rate',q.Rate,'number'],['Transit (days)','eq-transit',q.Transit_Days,'number'],['Valid Until (MM/DD/YY)','eq-valid',fmtDate(q.Valid_Until),'text'],['Notes','eq-notes',q.Notes,'text']].map(([l,id,val,t])=>`
+        <div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">${l}</div>
+        <input type="${t}" id="${id}" value="${val||''}" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);"></div>`).join('')}
+      <button class="btn btn-green" onclick="saveEditedQuote('${quoteId}')">Save changes</button>
+    </div></div>`;
   document.getElementById('rate-drawer').classList.add('open');
 }
 
 async function saveEditedQuote(quoteId){
   const g=id=>document.getElementById(id)?.value?.trim()||'';
-  const result=await apiPost({
-    action:'updateQuote',quoteId,
-    carrierName:g('eq-carrier'),rate:parseFloat(g('eq-rate')),
-    transitDays:parseInt(g('eq-transit')),validUntil:g('eq-valid'),notes:g('eq-notes')
-  });
+  const result=await apiPost({action:'updateQuote',quoteId,carrierName:g('eq-carrier'),rate:parseFloat(g('eq-rate')),transitDays:parseInt(g('eq-transit')),validUntil:g('eq-valid'),notes:g('eq-notes')});
   if(!result.error){
     const q=quotesForRFQ(currentRFQ.PO_Number).find(x=>String(x.Quote_ID)===String(quoteId));
     if(q){q.Carrier_Name=g('eq-carrier');q.Rate=parseFloat(g('eq-rate'));q.Transit_Days=parseInt(g('eq-transit'));q.Valid_Until=g('eq-valid');q.Notes=g('eq-notes');}
     closeDrawer();renderCarrierCards();renderRateSummary();showToast('Quote updated');
-  } else showToast('Error: '+result.error);
+  }else showToast('Error: '+result.error);
 }
 
-// FIX 8: Add quote — clean Quote_ID, no random in Carrier_Name column
 async function addQuote(){
   const carrier=document.getElementById('aq-carrier').value.trim();
   const rate=parseFloat(document.getElementById('aq-rate').value);
@@ -742,58 +919,52 @@ async function addQuote(){
     quotes.push({Quote_ID:result.id,RFQ_ID:String(currentRFQ.PO_Number),Carrier_Name:carrier,Rate:rate,Transit_Days:transit,Valid_Until:valid,Notes:notes,Is_Awarded:false});
     if(currentRFQ.Status==='Draft'||currentRFQ.Status==='Sent to Carriers'){
       await apiPost({action:'updateStatus',rfqId:String(currentRFQ.PO_Number),status:'Quotes Received'});
-      currentRFQ.Status='Quotes Received';
+      const tsNow=new Date().toISOString();
+      currentRFQ.Status='Quotes Received';currentRFQ.Timestamp_Quotes_Received=tsNow;
       document.getElementById('po-status-badge').innerHTML=`<span class="badge b-received">Quotes Received</span>`;
       document.getElementById('po-status-select').value='Quotes Received';
-      const rfq=rfqs.find(r=>String(r.PO_Number)===String(currentRFQ.PO_Number));if(rfq)rfq.Status='Quotes Received';
+      const rfq=rfqs.find(r=>String(r.PO_Number)===String(currentRFQ.PO_Number));
+      if(rfq){rfq.Status='Quotes Received';rfq.Timestamp_Quotes_Received=tsNow;}
     }
-    clearAddForm();renderCarrierCards();renderRateSummary();showToast('Quote saved');
-  } else showToast('Error saving quote: '+(result.error||'unknown'));
+    clearAddForm();renderCarrierCards();renderRateSummary();
+    document.getElementById('po-timeline').innerHTML=renderTimeline(currentRFQ);
+    showToast('Quote saved');
+  }else showToast('Error: '+(result.error||'unknown'));
   btn.textContent='Save quote';btn.disabled=false;
 }
 
-// FIX 2: Award — save rate to library automatically
 async function awardCarrier(quoteId,poNumber){
   const rfq=rfqs.find(r=>String(r.PO_Number)===String(poNumber))||currentRFQ;
-  const result=await apiPost({
-    action:'awardCarrier',quoteId,rfqId:String(poNumber),
-    saveToLibrary:true,
-    originPort:rfq?.Origin_Port||'',
-    destinationPort:rfq?.Destination_Port||'',
-    containerType:rfq?.Container_Type||'',
-    incoterm:rfq?.Incoterm||''
-  });
+  const result=await apiPost({action:'awardCarrier',quoteId,rfqId:String(poNumber),originPort:rfq?.Origin_Port||'',destinationPort:rfq?.Destination_Port||'',containerType:rfq?.Container_Type||'',incoterm:rfq?.Incoterm||''});
   if(result.status==='awarded'){
     quotesForRFQ(poNumber).forEach(q=>{q.Is_Awarded=String(q.Quote_ID)===String(quoteId);});
-    if(rfq)rfq.Status='Awarded';
+    const tsNow=new Date().toISOString();
+    if(rfq){rfq.Status='Awarded';rfq.Timestamp_Awarded=tsNow;}
     if(currentRFQ&&String(currentRFQ.PO_Number)===String(poNumber)){
-      currentRFQ.Status='Awarded';
+      currentRFQ.Status='Awarded';currentRFQ.Timestamp_Awarded=tsNow;
       document.getElementById('po-status-badge').innerHTML=`<span class="badge b-awarded">Awarded</span>`;
       document.getElementById('po-status-select').value='Awarded';
+      document.getElementById('po-timeline').innerHTML=renderTimeline(currentRFQ);
     }
     renderCarrierCards();renderRateSummary();renderDash();
-    showToast('Carrier awarded — rate saved to Rate Library');
-    // Refresh rates to show new entry
     rates=await apiGet('getRates');
-  } else showToast('Error: '+(result.error||'unknown'));
+    showToast('Carrier awarded — rate saved to Rate Library');
+  }else showToast('Error: '+(result.error||'unknown'));
 }
 
-function removeQuote(quoteId){
-  quotes=quotes.filter(q=>String(q.Quote_ID)!==String(quoteId));
-  renderCarrierCards();renderRateSummary();showToast('Quote removed');
-}
+function removeQuote(quoteId){quotes=quotes.filter(q=>String(q.Quote_ID)!==String(quoteId));renderCarrierCards();renderRateSummary();showToast('Quote removed');}
 function clearAddForm(){['aq-carrier','aq-rate','aq-transit','aq-valid','aq-notes'].forEach(id=>document.getElementById(id).value='');}
 
-// FIX 7: Edit RFQ modal
+// ── RFQ MODAL ──────────────────────────────────────────────────────
 function openEditRFQModal(){
   if(!currentRFQ)return;
   editingRFQ=true;
   document.getElementById('modal-title').textContent='Edit RFQ — '+currentRFQ.PO_Number;
   document.getElementById('save-rfq-btn').textContent='Save changes';
-  // Populate fields
   document.getElementById('nrfq-po').value=currentRFQ.PO_Number||'';
-  document.getElementById('nrfq-po').disabled=true; // PO Number is the key, don't change it
+  document.getElementById('nrfq-po').disabled=true;
   document.getElementById('nrfq-requestor').value=currentRFQ.Requestor||'';
+  document.getElementById('nrfq-owner').value=currentRFQ.Owner||'';
   document.getElementById('nrfq-date').value=fmtDate(currentRFQ.Ready_Date)||'';
   document.getElementById('nrfq-origin').value=currentRFQ.Origin_Port||'';
   document.getElementById('nrfq-dest').value=currentRFQ.Destination_Port||'';
@@ -822,14 +993,11 @@ function openNewRFQModal(){
   document.getElementById('nrfq-po').disabled=false;
   ['nrfq-po','nrfq-requestor','nrfq-date','nrfq-origin','nrfq-dest','nrfq-division','nrfq-transit','nrfq-supplier-rate','nrfq-target-rate','nrfq-addl'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('nrfq-qty').value=1;
+  document.getElementById('nrfq-owner').value='';
   ['nrfq-urgent','nrfq-pri-transit','nrfq-pri-cost','nrfq-direct','nrfq-transship','nrfq-genset','nrfq-inland'].forEach(id=>document.getElementById(id).checked=false);
   document.getElementById('rfq-modal').classList.remove('hidden');
 }
-
-function closeModal(){
-  document.getElementById('rfq-modal').classList.add('hidden');
-  document.getElementById('nrfq-po').disabled=false;
-}
+function closeModal(){document.getElementById('rfq-modal').classList.add('hidden');document.getElementById('nrfq-po').disabled=false;}
 
 async function saveRFQFromModal(){
   const po=document.getElementById('nrfq-po').value.trim();
@@ -837,8 +1005,10 @@ async function saveRFQFromModal(){
   const dest=document.getElementById('nrfq-dest').value.trim();
   if(!po||!origin||!dest){showToast('PO Number, Origin, and Destination are required.');return;}
   const btn=document.getElementById('save-rfq-btn');btn.textContent='Saving...';btn.disabled=true;
+  const now=new Date().toISOString();
   const payload={
     poNumber:po,requestor:document.getElementById('nrfq-requestor').value.trim(),
+    owner:document.getElementById('nrfq-owner').value,
     readyDate:document.getElementById('nrfq-date').value.trim(),
     originPort:origin,destinationPort:dest,
     containerType:document.getElementById('nrfq-container').value,
@@ -856,60 +1026,37 @@ async function saveRFQFromModal(){
     condGenset:document.getElementById('nrfq-genset').checked,
     condOriginInland:document.getElementById('nrfq-inland').checked,
     additionalInfo:document.getElementById('nrfq-addl').value.trim(),
-    status:'Draft',
-    _powerAppsId: new Date().toISOString()
+    _powerAppsId:now
   };
-
   if(editingRFQ){
     const result=await apiPost({action:'updateRFQ',...payload});
     if(!result.error){
-      Object.assign(currentRFQ,{
-        Requestor:payload.requestor,Ready_Date:payload.readyDate,
-        Origin_Port:payload.originPort,Destination_Port:payload.destinationPort,
-        Container_Type:payload.containerType,Quantity:payload.quantity,
-        Transit_Days:payload.transitDays,Incoterm:payload.incoterm,
-        Division:payload.division,Supplier_Rate:payload.supplierRate,
-        Target_Rate:payload.targetRate,Additional_Info:payload.additionalInfo,
-        Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,
-        Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,
-        Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,
-        Cond_Origin_Inland:payload.condOriginInland
-      });
+      Object.assign(currentRFQ,{Requestor:payload.requestor,Owner:payload.owner,Ready_Date:payload.readyDate,Origin_Port:payload.originPort,Destination_Port:payload.destinationPort,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Additional_Info:payload.additionalInfo,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland});
       closeModal();renderPOInfo();renderDash();renderRequestsTable();showToast('RFQ updated');
-    } else showToast('Error: '+result.error);
-  } else {
-    const result=await apiPost({action:'saveRFQ',...payload,_powerAppsId:payload._powerAppsId});
+    }else showToast('Error: '+result.error);
+  }else{
+    const result=await apiPost({action:'saveRFQ',...payload});
     if(result.status==='created'){
-      rfqs.unshift({PO_Number:po,Requestor:payload.requestor,Ready_Date:payload.readyDate,Origin_Port:origin,Destination_Port:dest,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland,Additional_Info:payload.additionalInfo,Status:'Draft','_PowerAppsId':new Date().toISOString()});
-      closeModal();renderDash();renderRequestsTable();showToast('RFQ saved — PO '+po);
-    } else showToast('Error: '+(result.error||'unknown'));
+      rfqs.unshift({PO_Number:po,Requestor:payload.requestor,Owner:payload.owner,Ready_Date:payload.readyDate,Origin_Port:origin,Destination_Port:dest,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland,Additional_Info:payload.additionalInfo,Status:'Draft','_PowerAppsId':now,Timestamp_Draft:now});
+      closeModal();renderDash();renderRequestsTable();populateReqFilters();showToast('RFQ saved — PO '+po);
+    }else showToast('Error: '+(result.error||'unknown'));
   }
   btn.textContent=editingRFQ?'Save changes':'Save RFQ';btn.disabled=false;
 }
 
 // ── RATE LIBRARY ───────────────────────────────────────────────────
 let rateView='table';
-function setRateView(v){
-  rateView=v;
-  document.getElementById('rate-table-view').classList.toggle('hidden',v!=='table');
-  document.getElementById('rate-lane-view').classList.toggle('hidden',v!=='lane');
-  document.getElementById('view-btn-table').style.background=v==='table'?'var(--bn-faint)':'var(--white)';
-  document.getElementById('view-btn-lane').style.background=v==='lane'?'var(--bn-faint)':'var(--white)';
-  renderRateLibrary();
-}
+function setRateView(v){rateView=v;document.getElementById('rate-table-view').classList.toggle('hidden',v!=='table');document.getElementById('rate-lane-view').classList.toggle('hidden',v!=='lane');document.getElementById('view-btn-table').style.background=v==='table'?'var(--bn-faint)':'var(--white)';document.getElementById('view-btn-lane').style.background=v==='lane'?'var(--bn-faint)':'var(--white)';renderRateLibrary();}
 
 function populateRLFilters(){
-  // FIX 6: populate origin and destination filters dynamically
   const origins=[...new Set(rates.map(r=>r.Origin_Port).filter(Boolean))].sort();
   const dests=[...new Set(rates.map(r=>r.Destination_Port).filter(Boolean))].sort();
   const carriers=[...new Set(rates.map(r=>r.Carrier_Name).filter(Boolean))].sort();
-  const oSel=document.getElementById('rl-origin');
-  const dSel=document.getElementById('rl-dest');
-  const cSel=document.getElementById('rl-carrier');
-  [oSel,dSel,cSel].forEach(s=>{while(s.options.length>1)s.remove(1);});
-  origins.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=o;oSel.appendChild(op);});
-  dests.forEach(d=>{const op=document.createElement('option');op.value=d;op.textContent=d;dSel.appendChild(op);});
-  carriers.forEach(c=>{const op=document.createElement('option');op.value=c;op.textContent=c;cSel.appendChild(op);});
+  [['rl-origin',origins],['rl-dest',dests],['rl-carrier',carriers]].forEach(([id,vals])=>{
+    const sel=document.getElementById(id);
+    while(sel.options.length>1)sel.remove(1);
+    vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
+  });
 }
 
 function getRF(){
@@ -941,12 +1088,13 @@ function renderRateLibrary(){
   document.getElementById('rl-carriers').textContent=[...new Set(rates.map(r=>r.Carrier_Name))].length;
   document.getElementById('rl-loading').classList.add('hidden');
   document.getElementById('rl-table').classList.remove('hidden');
-
   if(rateView==='table'){
+    // FIX 3: each row passes its own Rate_ID so drawer always shows the right rate
     document.getElementById('rl-tbody').innerHTML=data.map(r=>{
       const d=dF(r.Valid_Until);
       const total=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
-      return`<tr class="clickable" onclick="openRateDrawer('${r.Rate_ID}')">
+      const rateId=String(r.Rate_ID).replace(/'/g,"\\'");
+      return`<tr class="clickable" onclick="openRateDrawer('${rateId}')">
         <td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td>
         <td>${r.Origin_Port||'?'}</td><td>${r.Destination_Port||'?'}</td>
         <td>${r.Container_Type}</td><td>${r.Incoterm||'—'}</td>
@@ -957,42 +1105,27 @@ function renderRateLibrary(){
         <td style="color:var(--bt-muted)">${fmtDate(r.Valid_Until)}</td>
         <td><div style="display:flex;align-items:center;gap:7px;">${eBar(d,total)}<span class="${eC(d)}">${eL(d)}</span></div></td>
         <td style="color:var(--bn-mid);font-size:11px">${r.Source_RFQ||'—'}</td>
-      </tr>`;
-    }).join('');
-  } else {
-    const lm={};
-    data.forEach(r=>{const k=r.Origin_Port+'|||'+r.Destination_Port+'|||'+r.Container_Type;if(!lm[k])lm[k]=[];lm[k].push(r);});
+      </tr>`;}).join('');
+  }else{
+    const lm={};data.forEach(r=>{const k=r.Origin_Port+'|||'+r.Destination_Port+'|||'+r.Container_Type;if(!lm[k])lm[k]=[];lm[k].push(r);});
     document.getElementById('rl-lane-groups').innerHTML=Object.entries(lm).map(([k,rs])=>{
-      const[o,d,c]=k.split('|||');
-      const vi=rs.filter(r=>dF(r.Valid_Until)>=0);
-      const mr=Math.min(...rs.map(r=>parseFloat(r.Rate||9999)));
-      return`<div class="lane-group">
-        <div class="lane-group-header" onclick="this.nextElementSibling.classList.toggle('hidden')">
-          <div><div style="font-size:13px;font-weight:500;color:var(--bn)">${o||'?'} → ${d||'?'}</div>
-          <div style="font-size:11px;color:var(--bt-muted);margin-top:2px">${c} · ${rs.length} rate${rs.length>1?'s':''} · ${vi.length} valid</div></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:12px;font-weight:500;color:var(--bn-mid)">From $${mr.toLocaleString()}</span>
-            ${vi.length===0?'<span class="badge b-urgent">No valid rates</span>':''}
-          </div>
-        </div>
-        <div><table class="tbl"><thead><tr><th>Carrier</th><th>Incoterm</th><th>Rate</th><th>Transit</th><th>Type</th><th>Valid Until</th><th>Days Left</th></tr></thead>
-        <tbody>${rs.map(r=>{const d2=dF(r.Valid_Until);const t2=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
-          return`<tr class="clickable" onclick="openRateDrawer('${r.Rate_ID}')">
-            <td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td>
-            <td>${r.Incoterm||'—'}</td>
-            <td style="font-weight:500">$${parseFloat(r.Rate||0).toLocaleString()}</td>
-            <td>${r.Transit_Days}d</td>
-            <td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td>
-            <td>${fmtDate(r.Valid_Until)}</td>
-            <td><div style="display:flex;align-items:center;gap:7px;">${eBar(d2,t2)}<span class="${eC(d2)}">${eL(d2)}</span></div></td>
-          </tr>`;}).join('')}</tbody></table></div>
-      </div>`;
-    }).join('');
+      const[o,d,c]=k.split('|||');const vi=rs.filter(r=>dF(r.Valid_Until)>=0);const mr=Math.min(...rs.map(r=>parseFloat(r.Rate||9999)));
+      return`<div class="lane-group"><div class="lane-group-header" onclick="this.nextElementSibling.classList.toggle('hidden')">
+        <div><div style="font-size:13px;font-weight:500;color:var(--bn)">${o||'?'} → ${d||'?'}</div>
+        <div style="font-size:11px;color:var(--bt-muted);margin-top:2px">${c} · ${rs.length} rate${rs.length>1?'s':''} · ${vi.length} valid</div></div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:500;color:var(--bn-mid)">From $${mr.toLocaleString()}</span>${vi.length===0?'<span class="badge b-urgent">No valid rates</span>':''}</div>
+      </div>
+      <div><table class="tbl"><thead><tr><th>Carrier</th><th>Incoterm</th><th>Rate</th><th>Transit</th><th>Type</th><th>Valid Until</th><th>Days Left</th></tr></thead>
+      <tbody>${rs.map(r=>{const d2=dF(r.Valid_Until);const t2=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);const rid=String(r.Rate_ID).replace(/'/g,"\\'");
+        return`<tr class="clickable" onclick="openRateDrawer('${rid}')"><td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td><td>${r.Incoterm||'—'}</td><td style="font-weight:500">$${parseFloat(r.Rate||0).toLocaleString()}</td><td>${r.Transit_Days}d</td><td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td><td>${fmtDate(r.Valid_Until)}</td><td><div style="display:flex;align-items:center;gap:7px;">${eBar(d2,t2)}<span class="${eC(d2)}">${eL(d2)}</span></div></td></tr>`;
+      }).join('')}</tbody></table></div></div>`;}).join('');
   }
 }
 
+// FIX 3: openRateDrawer uses strict string match on Rate_ID
 function openRateDrawer(id){
-  const r=rates.find(x=>String(x.Rate_ID)===String(id));if(!r)return;
+  const r=rates.find(x=>String(x.Rate_ID)===String(id));
+  if(!r){console.warn('Rate not found:',id,rates.map(x=>x.Rate_ID));return;}
   const d=dF(r.Valid_Until);
   const total=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
   document.getElementById('rd-title').textContent=r.Carrier_Name+' — '+(r.Origin_Port||'?')+' → '+(r.Destination_Port||'?');
@@ -1032,16 +1165,14 @@ function openRateDrawer(id){
 }
 
 function openAddRateDrawer(){
-  document.getElementById('rd-title').textContent='Add Rate';
-  document.getElementById('rd-sub').textContent='Manually enter a carrier rate';
+  document.getElementById('rd-title').textContent='Add Rate';document.getElementById('rd-sub').textContent='Manually enter a carrier rate';
   const fields=[['Carrier Name','nr-carrier','text'],['Origin Port (City, Country)','nr-origin','text'],['Destination Port (City, Country)','nr-dest','text'],['Container Type','nr-container','text'],['Incoterm','nr-incoterm','text'],['Rate (USD)','nr-rate','number'],['Transit (days)','nr-transit','number'],['Valid From (MM/DD/YY)','nr-from','text'],['Valid Until (MM/DD/YY)','nr-until','text'],['Source PO Number','nr-source','text']];
   document.getElementById('rd-body').innerHTML=`<div class="dsec"><div class="dsec-title">Rate information</div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       ${fields.map(([l,id,t])=>`<div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">${l}</div>
         <input type="${t}" id="${id}" placeholder="${l}" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);"></div>`).join('')}
       <div><div style="font-size:10px;color:var(--bt-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">Rate Type</div>
-        <select id="nr-type" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);">
-          <option>Spot</option><option>Contract</option></select></div>
+        <select id="nr-type" style="width:100%;font-size:12px;padding:6px 9px;border-radius:6px;border:0.5px solid var(--bbm);background:var(--white);color:var(--bt);font-family:var(--font);"><option>Spot</option><option>Contract</option></select></div>
       <button class="btn btn-green" onclick="saveNewRate()">Save Rate</button>
     </div></div>`;
   document.getElementById('rate-drawer').classList.add('open');
@@ -1052,58 +1183,39 @@ async function saveNewRate(){
   const body={action:'saveRate',carrierName:g('nr-carrier'),originPort:g('nr-origin'),destinationPort:g('nr-dest'),containerType:g('nr-container'),incoterm:g('nr-incoterm'),rate:parseFloat(g('nr-rate')),transitDays:parseInt(g('nr-transit')),validFrom:g('nr-from'),validUntil:g('nr-until'),sourceRFQ:g('nr-source'),rateType:document.getElementById('nr-type')?.value||'Spot'};
   const result=await apiPost(body);
   if(result.status==='created'){
-    rates.push({Rate_ID:result.id,...body,Valid_From:body.validFrom,Valid_Until:body.validUntil,Carrier_Name:body.carrierName,Origin_Port:body.originPort,Destination_Port:body.destinationPort,Container_Type:body.containerType,Rate:body.rate,Transit_Days:body.transitDays,Rate_Type:body.rateType,Source_RFQ:body.sourceRFQ});
+    rates.push({Rate_ID:result.id,Carrier_Name:body.carrierName,Origin_Port:body.originPort,Destination_Port:body.destinationPort,Container_Type:body.containerType,Incoterm:body.incoterm,Rate:body.rate,Transit_Days:body.transitDays,Rate_Type:body.rateType,Valid_From:body.validFrom,Valid_Until:body.validUntil,Source_RFQ:body.sourceRFQ});
     closeDrawer();renderRateLibrary();renderDash();showToast('Rate saved');
-  } else showToast('Error: '+(result.error||'unknown'));
+  }else showToast('Error: '+(result.error||'unknown'));
 }
 
 function closeDrawer(){document.getElementById('rate-drawer').classList.remove('open');}
-function clearRateFilters(){
-  ['rl-type','rl-carrier','rl-container','rl-origin','rl-dest','rl-validity'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  const s=document.getElementById('rl-search');if(s)s.value='';
-  renderRateLibrary();
-}
+function clearRateFilters(){['rl-type','rl-carrier','rl-container','rl-origin','rl-dest','rl-validity'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const s=document.getElementById('rl-search');if(s)s.value='';renderRateLibrary();}
 
 // ── ANALYTICS ──────────────────────────────────────────────────────
 function getAF(){
-  const fs=document.getElementById('a-status')?.value||'';
-  const fc=document.getElementById('a-container')?.value||'';
-  const fd=document.getElementById('a-division')?.value||'';
-  const fq=(document.getElementById('a-search')?.value||'').toLowerCase();
+  const fs=document.getElementById('a-status')?.value||'';const fc=document.getElementById('a-container')?.value||'';const fd=document.getElementById('a-division')?.value||'';const fq=(document.getElementById('a-search')?.value||'').toLowerCase();
   return rfqs.filter(q=>(!fs||q.Status===fs)&&(!fc||q.Container_Type===fc)&&(!fd||q.Division===fd)&&(!fq||(q.PO_Number+(q.Requestor||'')+q.Origin_Port+q.Destination_Port).toLowerCase().includes(fq)));
 }
-
 function updateAnalytics(){
-  const data=getAF();
-  document.getElementById('filtered-count').textContent=data.length+' records';
-  const ws=data.filter(q=>sv(q)!==null);
-  const ts=ws.reduce((s,q)=>s+sv(q),0);
-  const ap=ws.length?(ws.reduce((s,q)=>s+parseFloat(svP(q)),0)/ws.length).toFixed(1):'—';
-  document.getElementById('analytics-stats').innerHTML=`
-    <div class="stat-card"><div class="sc-label">Records</div><div class="sc-val">${data.length}</div></div>
-    <div class="stat-card"><div class="sc-label">Total savings vs supplier</div><div class="sc-val" style="color:var(--bg-dark)">$${ts.toLocaleString()}</div><div class="sc-sub">avg ${ap}%</div></div>
-    <div class="stat-card"><div class="sc-label">Awarded</div><div class="sc-val">${data.filter(q=>q.Status==='Awarded').length}</div></div>`;
-  const rm={};
-  data.forEach(q=>{const k=route(q);if(!rm[k])rm[k]=[];rm[k].push(sv(q)||0);});
-  const routes=Object.entries(rm).map(([k,v])=>({k,avg:v.reduce((a,b)=>a+b,0)/v.length})).sort((a,b)=>b.avg-a.avg).slice(0,6);
-  const maxR=Math.max(...routes.map(r=>r.avg),1);
+  const data=getAF();document.getElementById('filtered-count').textContent=data.length+' records';
+  const ws=data.filter(q=>svSupplier(q)!==null);const ts=ws.reduce((s,q)=>s+svSupplier(q),0);const ap=ws.length?(ws.reduce((s,q)=>s+parseFloat(svSupplierP(q)),0)/ws.length).toFixed(1):'—';
+  document.getElementById('analytics-stats').innerHTML=`<div class="stat-card"><div class="sc-label">Records</div><div class="sc-val">${data.length}</div></div><div class="stat-card"><div class="sc-label">Total savings vs supplier</div><div class="sc-val" style="color:var(--bg-dark)">$${ts.toLocaleString()}</div><div class="sc-sub">avg ${ap}%</div></div><div class="stat-card"><div class="sc-label">Awarded</div><div class="sc-val">${data.filter(q=>q.Status==='Awarded').length}</div></div>`;
+  const rm={};data.forEach(q=>{const k=route(q);if(!rm[k])rm[k]=[];rm[k].push(svSupplier(q)||0);});
+  const routes=Object.entries(rm).map(([k,v])=>({k,avg:v.reduce((a,b)=>a+b,0)/v.length})).sort((a,b)=>b.avg-a.avg).slice(0,6);const maxR=Math.max(...routes.map(r=>r.avg),1);
   document.getElementById('savings-chart').innerHTML=routes.map(r=>`<div class="bar-row"><div class="bar-label">${r.k}</div><div class="bar-track-o"><div class="bar-fill" style="width:${Math.max(0,r.avg/maxR*100).toFixed(0)}%;background:${r.avg>=0?'#4A9B3F':'#C0392B'};"></div></div><div class="bar-val" style="color:${r.avg>=0?'var(--bg-dark)':'var(--br)'}">${r.avg>=0?'-':'+'} $${Math.abs(Math.round(r.avg)).toLocaleString()}</div></div>`).join('');
-  const cm={};quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]=0;cm[q.Carrier_Name]++;});
-  const carriers=Object.entries(cm).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  const maxC=Math.max(...carriers.map(c=>c[1]),1);
+  const cm={};quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]=0;cm[q.Carrier_Name]++;});const carriers=Object.entries(cm).sort((a,b)=>b[1]-a[1]).slice(0,6);const maxC=Math.max(...carriers.map(c=>c[1]),1);
   document.getElementById('carrier-chart').innerHTML=carriers.map(c=>`<div class="bar-row"><div class="bar-label">${c[0]}</div><div class="bar-track-o"><div class="bar-fill" style="width:${(c[1]/maxC*100).toFixed(0)}%;background:var(--bn);"></div></div><div class="bar-val">${c[1]}</div></div>`).join('');
-  const divSel=document.getElementById('a-division');
-  if(divSel.options.length<=1){const divs=[...new Set(rfqs.map(r=>r.Division).filter(Boolean))];divs.sort().forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;divSel.appendChild(o);});}
+  const divSel=document.getElementById('a-division');if(divSel.options.length<=1){const divs=[...new Set(rfqs.map(r=>r.Division).filter(Boolean))];divs.sort().forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;divSel.appendChild(o);});}
   document.getElementById('analytics-tbody').innerHTML=data.map(q=>`
     <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
       <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
-      <td>${q.Requestor||'—'}</td>
-      <td>${route(q)}</td><td>${q.Container_Type}</td>
-      <td>${q.Division}</td><td>${q.Incoterm}</td>
+      <td>${q.Owner||'—'}</td><td>${q.Requestor||'—'}</td>
+      <td>${route(q)}</td><td>${q.Container_Type}</td><td>${q.Division||'—'}</td><td>${q.Incoterm}</td>
       <td>$${parseFloat(q.Supplier_Rate||0).toLocaleString()}</td>
+      <td>$${parseFloat(q.Target_Rate||0).toLocaleString()}</td>
       <td>${bestR(q.PO_Number)!==null?'$'+bestR(q.PO_Number).toLocaleString():'—'}</td>
-      <td>${sv(q)!==null?'$'+sv(q).toLocaleString():'—'}</td>
-      <td>${svP(q)!==null?svP(q)+'%':'—'}</td>
+      <td>${fmtSv(svSupplier(q),svSupplierP(q))}</td>
+      <td>${fmtSv(svTarget(q),svTargetP(q))}</td>
       <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
     </tr>`).join('');
 }
@@ -1111,19 +1223,13 @@ function clearAF(){['a-status','a-container','a-division'].forEach(id=>{const e=
 
 // ── CARRIER STATS ──────────────────────────────────────────────────
 function renderCarrierStats(){
-  document.getElementById('carrier-loading').classList.add('hidden');
-  document.getElementById('carrier-panel').classList.remove('hidden');
-  const cm={};
-  quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]={quotes:0,awards:0,totalRate:0,totalTransit:0};cm[q.Carrier_Name].quotes++;if(bool(q.Is_Awarded))cm[q.Carrier_Name].awards++;cm[q.Carrier_Name].totalRate+=parseFloat(q.Rate||0);cm[q.Carrier_Name].totalTransit+=parseInt(q.Transit_Days||0);});
-  document.getElementById('carrier-tbody').innerHTML=Object.entries(cm).sort((a,b)=>b[1].quotes-a[1].quotes).map(([name,s])=>`
-    <tr><td style="font-weight:500;color:var(--bn)">${name}</td><td>${s.quotes}</td><td>${s.awards}</td>
-    <td>${s.quotes?((s.awards/s.quotes)*100).toFixed(0)+'%':'—'}</td>
-    <td>$${s.quotes?(s.totalRate/s.quotes).toLocaleString(undefined,{maximumFractionDigits:0}):'—'}</td>
-    <td>${s.quotes?Math.round(s.totalTransit/s.quotes):'—'}</td></tr>`).join('');
+  document.getElementById('carrier-loading').classList.add('hidden');document.getElementById('carrier-panel').classList.remove('hidden');
+  const cm={};quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]={quotes:0,awards:0,totalRate:0,totalTransit:0};cm[q.Carrier_Name].quotes++;if(bool(q.Is_Awarded))cm[q.Carrier_Name].awards++;cm[q.Carrier_Name].totalRate+=parseFloat(q.Rate||0);cm[q.Carrier_Name].totalTransit+=parseInt(q.Transit_Days||0);});
+  document.getElementById('carrier-tbody').innerHTML=Object.entries(cm).sort((a,b)=>b[1].quotes-a[1].quotes).map(([name,s])=>`<tr><td style="font-weight:500;color:var(--bn)">${name}</td><td>${s.quotes}</td><td>${s.awards}</td><td>${s.quotes?((s.awards/s.quotes)*100).toFixed(0)+'%':'—'}</td><td>$${s.quotes?(s.totalRate/s.quotes).toLocaleString(undefined,{maximumFractionDigits:0}):'—'}</td><td>${s.quotes?Math.round(s.totalTransit/s.quotes):'—'}</td></tr>`).join('');
 }
 
 // ── EXPORT ─────────────────────────────────────────────────────────
-function exportCSV(){const data=getAF();const h=['PO Number','Requestor','Origin','Dest','Container','Division','Incoterm','Supplier Rate','Best Rate','Savings','Status'];const rows=data.map(q=>[q.PO_Number,q.Requestor||'',q.Origin_Port,q.Destination_Port,q.Container_Type,q.Division,q.Incoterm,q.Supplier_Rate,bestR(q.PO_Number)||'',sv(q)||'',q.Status]);dl([h,...rows],'brothers_quotes.csv');}
+function exportCSV(){const data=getAF();const h=['PO Number','Owner','Requestor','Origin','Dest','Container','Division','Incoterm','Supplier Rate','Target Rate','Best Rate','Savings vs Supplier','Savings vs Target','Status'];const rows=data.map(q=>[q.PO_Number,q.Owner||'',q.Requestor||'',q.Origin_Port,q.Destination_Port,q.Container_Type,q.Division,q.Incoterm,q.Supplier_Rate,q.Target_Rate,bestR(q.PO_Number)||'',svSupplier(q)||'',svTarget(q)||'',q.Status]);dl([h,...rows],'brothers_quotes.csv');}
 function exportRatesCSV(){const data=getRF();const h=['Carrier','Origin','Dest','Container','Incoterm','Rate','Transit','Type','Valid From','Valid Until','Days Left','Source PO'];const rows=data.map(r=>[r.Carrier_Name,r.Origin_Port,r.Destination_Port,r.Container_Type,r.Incoterm||'',r.Rate,r.Transit_Days,r.Rate_Type,fmtDate(r.Valid_From),fmtDate(r.Valid_Until),dF(r.Valid_Until),r.Source_RFQ]);dl([h,...rows],'brothers_rate_library.csv');}
 function dl(rows,name){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));a.download=name;a.click();}
 
@@ -1140,7 +1246,7 @@ function nav(page){
 // ── INIT ───────────────────────────────────────────────────────────
 async function init(){
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  await loadAll();renderDash();renderRequestsTable();
+  await loadAll();renderDash();renderRequestsTable();populateReqFilters();
   document.getElementById('last-sync').textContent='Synced '+new Date().toLocaleTimeString();
 }
 init();
