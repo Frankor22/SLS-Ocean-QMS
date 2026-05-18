@@ -872,13 +872,6 @@ async function updateStatusFromSelect(){
     document.getElementById('po-timeline').innerHTML=renderTimeline(currentRFQ);
     renderDash();showToast('Status updated: '+newStatus);
   }
-}
-
-// Timestamp column map (client-side)
-const STATUS_TS_MAP={
-  'Draft':'Timestamp_Draft','Sent to Carriers':'Timestamp_Sent',
-  'Quotes Received':'Timestamp_Quotes_Received','Awaiting Approval':'Timestamp_Awaiting_Approval',
-  'Awarded':'Timestamp_Awarded','Moved with Supplier':'Timestamp_Moved_Supplier'
 };
 
 function openEditQuoteDrawer(quoteId){
