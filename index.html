@@ -885,13 +885,6 @@ async function updateStatusFromSelect(){
   }
 }
  
-// Timestamp column map (client-side)
-const STATUS_TS_MAP={
-  'Draft':'Timestamp_Draft','Sent to Carriers':'Timestamp_Sent',
-  'Quotes Received':'Timestamp_Quotes_Received','Awaiting Approval':'Timestamp_Awaiting_Approval',
-  'Awarded':'Timestamp_Awarded','Moved with Supplier':'Timestamp_Moved_Supplier'
-};
- 
 function openEditQuoteDrawer(quoteId){
   const q=quotesForRFQ(currentRFQ.PO_Number).find(x=>String(x.Quote_ID)===String(quoteId));
   if(!q)return;
