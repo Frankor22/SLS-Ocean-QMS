@@ -213,9 +213,9 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;" id="last-sync"></div>
   </div>
 </div>
-
+ 
 <div class="main">
-
+ 
 <!-- DASHBOARD -->
 <div id="pg-dashboard" class="page-wrap">
   <div class="topbar">
@@ -249,7 +249,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     </div>
   </div>
 </div>
-
+ 
 <!-- REQUESTS -->
 <div id="pg-requests" class="page-wrap hidden">
   <div class="topbar">
@@ -277,14 +277,13 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
         <th>Incoterm</th><th>Division</th>
         <th>Urgent</th><th>Pri Transit</th><th>Direct Sail</th><th>Transship</th>
         <th>Supplier Rate</th><th>Target Rate</th><th>Best Rate</th>
-        <th>Savings vs Supplier</th><th>Savings vs Target</th>
         <th>Status</th><th>Age</th>
       </tr></thead>
       <tbody id="req-tbody"></tbody></table>
     </div>
   </div>
 </div>
-
+ 
 <!-- PO DETAIL -->
 <div id="pg-po-detail" class="page-wrap hidden">
   <div class="topbar">
@@ -358,7 +357,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     </div>
   </div>
 </div>
-
+ 
 <!-- RATE LIBRARY -->
 <div id="pg-rates" class="page-wrap hidden">
   <div class="topbar">
@@ -393,7 +392,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     <div id="rate-lane-view" class="hidden"><div id="rl-lane-groups"></div></div>
   </div>
 </div>
-
+ 
 <!-- ANALYTICS -->
 <div id="pg-analytics" class="page-wrap hidden">
   <div class="topbar">
@@ -418,7 +417,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     </div>
   </div>
 </div>
-
+ 
 <!-- CARRIERS -->
 <div id="pg-carriers" class="page-wrap hidden">
   <div class="topbar"><div><div class="page-title">Carrier Performance</div><div class="page-sub">Win rates and avg transit</div></div></div>
@@ -427,9 +426,9 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     <div class="panel hidden" id="carrier-panel"><table class="tbl"><thead><tr><th>Carrier</th><th>Quotes submitted</th><th>Awards</th><th>Win rate</th><th>Avg Rate (USD)</th><th>Avg Transit (days)</th></tr></thead><tbody id="carrier-tbody"></tbody></table></div>
   </div>
 </div>
-
+ 
 </div></div>
-
+ 
 <!-- RATE DRAWER -->
 <div class="drawer" id="rate-drawer">
   <div class="drawer-head">
@@ -438,7 +437,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
   </div>
   <div class="drawer-body" id="rd-body"></div>
 </div>
-
+ 
 <!-- NEW / EDIT RFQ MODAL -->
 <div class="modal-overlay hidden" id="rfq-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
@@ -494,24 +493,24 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     </div>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script>
 // ── CONFIG ─────────────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbxzJ1kAofclGoK3vK9BWur7wx39KkUiZwbykmRHp1d51Re8Owe8pwCy34TL9pDOTZs/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxiZOpc14v5meWyH2ctgK99juAukx9yeUfOKu3MM-42kP14MfaL7tCKaC6oN0w8twQ/exec';
 // ──────────────────────────────────────────────────────────────────
-
+ 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 let rfqs=[], quotes=[], rates=[], currentRFQ=null, editingRFQ=false;
-
+ 
 // All statuses in order
 const ALL_STATUSES = ['Draft','Sent to Carriers','Quotes Received','Awaiting Approval','Awarded','Moved with Supplier'];
 // Dashboard buckets — excludes Draft and Moved with Supplier
 const DASH_BUCKETS = ['Sent to Carriers','Quotes Received','Awaiting Approval','Awarded'];
 // Hidden from dashboard
 const DASH_HIDDEN = ['Draft','Moved with Supplier'];
-
+ 
 // ── API ────────────────────────────────────────────────────────────
 async function apiGet(action,params={}){
   try{const qs=new URLSearchParams({action,...params});const res=await fetch(`${API_URL}?${qs}`);return res.json();}
@@ -532,7 +531,7 @@ async function refreshAll(){
   document.getElementById('last-sync').textContent='Synced '+new Date().toLocaleTimeString();
   showToast('Data refreshed');
 }
-
+ 
 // ── HELPERS ────────────────────────────────────────────────────────
 function fmtDate(ds){
   if(!ds)return'—';
@@ -548,43 +547,52 @@ function dF(ds){if(!ds)return null;const d=new Date(ds);d.setHours(0,0,0,0);retu
 function eC(d){return d<0?'exp-expired':d<=7?'exp-soon':'exp-valid';}
 function eL(d){return d<0?'Expired':d===0?'Today':d+' days';}
 function eBar(days,total){const pct=Math.max(0,Math.min(100,(days/Math.max(total,1))*100));const col=days<0?'#C0392B':days<=7?'#D4860A':'#4A9B3F';return`<div class="exp-bar"><div class="exp-track"><div class="exp-fill" style="width:${pct.toFixed(0)}%;background:${col};"></div></div></div>`;}
-
+ 
 const sbm={
   'Draft':'b-draft','Sent to Carriers':'b-sent','Quotes Received':'b-received',
   'Awaiting Approval':'b-approval','Awarded':'b-awarded','Moved with Supplier':'b-moved'
 };
-
+ 
 function bool(v){return v===true||v==='TRUE'||v==='true'||v===1||v==='1';}
 function quotesForRFQ(po){return quotes.filter(q=>String(q.RFQ_ID)===String(po));}
 function bestR(po){const rq=quotesForRFQ(po);if(!rq.length)return null;const rs=rq.map(q=>parseFloat(q.Rate)).filter(r=>!isNaN(r));return rs.length?Math.min(...rs):null;}
-
+ 
 // Savings vs Supplier
 function svSupplier(rfq){const b=bestR(rfq.PO_Number);return b!==null?parseFloat(rfq.Supplier_Rate)-b:null;}
 function svSupplierP(rfq){const s=svSupplier(rfq);return s!==null&&parseFloat(rfq.Supplier_Rate)?((s/parseFloat(rfq.Supplier_Rate))*100).toFixed(1):null;}
-
+ 
 // Savings vs Target
 function svTarget(rfq){const b=bestR(rfq.PO_Number);return b!==null&&parseFloat(rfq.Target_Rate||0)?parseFloat(rfq.Target_Rate)-b:null;}
 function svTargetP(rfq){const s=svTarget(rfq);return s!==null&&parseFloat(rfq.Target_Rate||0)?((s/parseFloat(rfq.Target_Rate))*100).toFixed(1):null;}
-
+ 
 function fmtSv(val,pct){
   if(val===null)return'<span style="color:var(--bt-faint)">—</span>';
   const cls=val>=0?'savings-pos':'savings-neg';
   return`<span class="${cls}">${val>=0?'-':'+'}$${Math.abs(val).toLocaleString()}${pct!==null?' ('+Math.abs(pct)+'%)':''}</span>`;
 }
-
-// Age — reads _PowerAppsId field written on creation
+ 
+// Age — reads __PowerAppsId__ (double underscore) written on creation, falls back to Timestamp_Draft
 function age(rfq){
-  const ts=rfq['_PowerAppsId']||rfq['Created']||'';
-  if(!ts)return'—';
-  const d=new Date(ts);if(isNaN(d.getTime()))return'—';
-  const diffMs=Date.now()-d.getTime();
-  const diffDays=Math.floor(diffMs/86400000);
-  if(diffDays===0){const hrs=Math.floor(diffMs/3600000);return hrs===0?'<1h':hrs+'h';}
-  return diffDays+'d';
+  const ts = rfq['__PowerAppsId__'] || rfq['Timestamp_Draft'] || '';
+  if(!ts) return '—';
+  const d = new Date(ts);
+  if(isNaN(d.getTime())) return '—';
+  const diffMs = Date.now() - d.getTime();
+  const diffDays = Math.floor(diffMs / 86400000);
+  if(diffDays === 0){ const hrs = Math.floor(diffMs/3600000); return hrs === 0 ? '<1h' : hrs+'h'; }
+  return diffDays + 'd';
 }
 function route(q){return`${q.Origin_Port||'?'} → ${q.Destination_Port||'?'}`;}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
-
+function toggleBucket(id){
+  const el=document.getElementById(id);
+  const icon=document.getElementById(id+'-icon');
+  if(!el)return;
+  const collapsed=el.style.display==='none';
+  el.style.display=collapsed?'':'none';
+  if(icon)icon.textContent=collapsed?'▲':'▼';
+}
+ 
 // ── TIME TRACKING ──────────────────────────────────────────────────
 const STATUS_TS_MAP = {
   'Draft':               'Timestamp_Draft',
@@ -594,7 +602,7 @@ const STATUS_TS_MAP = {
   'Awarded':             'Timestamp_Awarded',
   'Moved with Supplier': 'Timestamp_Moved_Supplier'
 };
-
+ 
 function diffLabel(ms){
   if(ms<0)return'—';
   const hrs=Math.floor(ms/3600000);
@@ -602,7 +610,7 @@ function diffLabel(ms){
   const days=Math.floor(ms/86400000);
   return days+'d '+Math.floor((ms%86400000)/3600000)+'h';
 }
-
+ 
 function renderTimeline(rfq){
   const statuses=ALL_STATUSES;
   const rows=[];
@@ -641,7 +649,7 @@ function renderTimeline(rfq){
   }
   return rows.join('');
 }
-
+ 
 // ── DASHBOARD ──────────────────────────────────────────────────────
 function renderDash(){
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -657,28 +665,34 @@ function renderDash(){
   document.getElementById('kpi-expiring').textContent=soonRates.length;
   document.getElementById('expiry-badge').textContent=soonRates.length||'';
   document.getElementById('req-badge').textContent=rfqs.filter(r=>r.Status==='Quotes Received'||r.Status==='Awaiting Approval').length||'';
-
+ 
   document.getElementById('dash-loading').classList.add('hidden');
-
-  // Buckets
+ 
+  // Buckets — Draft first, then active statuses, exclude Moved with Supplier
+  const BUCKET_ORDER = ['Draft','Sent to Carriers','Quotes Received','Awaiting Approval','Awarded'];
   const bucketColors={
+    'Draft':'',
     'Sent to Carriers':'bucket-sent',
     'Quotes Received':'bucket-received',
     'Awaiting Approval':'bucket-approval',
     'Awarded':'bucket-awarded'
   };
   let bucketsHtml='';
-  DASH_BUCKETS.forEach(status=>{
+  BUCKET_ORDER.forEach(status=>{
     const items=rfqs.filter(r=>r.Status===status);
     if(!items.length)return;
+    const bucketId='bucket-'+status.replace(/\s+/g,'-');
     bucketsHtml+=`
       <div class="bucket ${bucketColors[status]||''}">
-        <div class="bucket-header">
+        <div class="bucket-header" onclick="toggleBucket('${bucketId}')" style="cursor:pointer;">
           <span class="bucket-title">${status}</span>
-          <span class="bucket-count">${items.length} RFQ${items.length!==1?'s':''}</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="bucket-count">${items.length} RFQ${items.length!==1?'s':''}</span>
+            <span id="${bucketId}-icon" style="font-size:12px;color:var(--bt-muted);">▲</span>
+          </div>
         </div>
-        <div style="overflow-x:auto;">
-        <table class="tbl"><thead><tr><th>PO Number</th><th>Owner</th><th>Requestor</th><th>Route</th><th>Container</th><th>Age</th><th>Savings vs Supplier</th></tr></thead>
+        <div id="${bucketId}" style="overflow-x:auto;">
+        <table class="tbl"><thead><tr><th>PO Number</th><th>Owner</th><th>Requestor</th><th>Route</th><th>Container</th><th>Age</th></tr></thead>
         <tbody>${items.map(q=>`
           <tr class="clickable" onclick="openPODetail('${q.PO_Number}')">
             <td style="font-weight:500;color:var(--bn-mid)">${q.PO_Number}</td>
@@ -687,13 +701,12 @@ function renderDash(){
             <td>${route(q)}</td>
             <td>${q.Container_Type}</td>
             <td>${age(q)}</td>
-            <td>${fmtSv(svSupplier(q),svSupplierP(q))}</td>
           </tr>`).join('')}
         </tbody></table></div>
       </div>`;
   });
   document.getElementById('dash-buckets').innerHTML=bucketsHtml||'<div style="padding:2rem;text-align:center;color:var(--bt-faint)">No active RFQs</div>';
-
+ 
   // Expiring rates
   const expiring=rates.filter(r=>{const d=dF(r.Valid_Until);return d!==null&&d>=0&&d<=10;}).sort((a,b)=>dF(a.Valid_Until)-dF(b.Valid_Until));
   document.getElementById('dash-expiring-tbody').innerHTML=expiring.slice(0,5).map(r=>{const d=dF(r.Valid_Until);return`
@@ -703,7 +716,7 @@ function renderDash(){
       <td>${fmtDate(r.Valid_Until)}</td>
       <td><span class="${eC(d)}">${eL(d)}</span></td>
     </tr>`;}).join('');
-
+ 
   // Alerts
   const alerts=[];
   rfqs.filter(r=>r.Status==='Quotes Received').forEach(r=>alerts.push({dot:'var(--br)',text:`${r.PO_Number} — Quotes received, awaiting decision.`}));
@@ -715,7 +728,7 @@ function renderDash(){
       <div style="font-size:11.5px;line-height:1.4;color:var(--bt)">${a.text}</div>
     </div>`).join('');
 }
-
+ 
 // ── REQUESTS TABLE ─────────────────────────────────────────────────
 function populateReqFilters(){
   const requestors=[...new Set(rfqs.map(r=>r.Requestor).filter(Boolean))].sort();
@@ -728,7 +741,7 @@ function populateReqFilters(){
     vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
   });
 }
-
+ 
 function renderRequestsTable(){
   const fs=document.getElementById('filter-status').value;
   const fc=document.getElementById('filter-container').value;
@@ -760,14 +773,12 @@ function renderRequestsTable(){
       <td>$${parseFloat(q.Supplier_Rate||0).toLocaleString()}</td>
       <td>$${parseFloat(q.Target_Rate||0).toLocaleString()}</td>
       <td>${bestR(q.PO_Number)!==null?'$'+bestR(q.PO_Number).toLocaleString():'<span style="color:var(--bt-faint)">Pending</span>'}</td>
-      <td>${fmtSv(svSupplier(q),svSupplierP(q))}</td>
-      <td>${fmtSv(svTarget(q),svTargetP(q))}</td>
       <td><span class="badge ${sbm[q.Status]||'b-draft'}">${q.Status}</span></td>
       <td>${age(q)}</td>
     </tr>`).join('');
 }
 function clearReqFilters(){['filter-status','filter-container','filter-owner','filter-requestor','filter-origin','filter-dest','filter-division'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});renderRequestsTable();}
-
+ 
 // ── PO DETAIL ──────────────────────────────────────────────────────
 async function openPODetail(poNumber){
   currentRFQ=rfqs.find(r=>String(r.PO_Number)===String(poNumber));
@@ -787,7 +798,7 @@ async function openPODetail(poNumber){
   document.getElementById('po-loading').classList.add('hidden');
   document.getElementById('po-content').classList.remove('hidden');
 }
-
+ 
 function renderPOInfo(){
   if(!currentRFQ)return;
   const fields=[
@@ -806,7 +817,7 @@ function renderPOInfo(){
   if(currentRFQ.Additional_Info){addlCard.classList.remove('hidden');document.getElementById('po-addl-text').textContent=currentRFQ.Additional_Info;}
   else addlCard.classList.add('hidden');
 }
-
+ 
 function renderCarrierCards(){
   if(!currentRFQ)return;
   const rfqQuotes=quotesForRFQ(currentRFQ.PO_Number);
@@ -838,7 +849,7 @@ function renderCarrierCards(){
       </div>
     </div>`;}).join('');
 }
-
+ 
 function renderRateSummary(){
   if(!currentRFQ)return;
   const best=bestR(currentRFQ.PO_Number);
@@ -856,7 +867,7 @@ function renderRateSummary(){
     <div class="kpi" style="margin:0"><div class="kpi-label">Savings vs Supplier</div><div class="kpi-value ${sSupp>=0?'kpi-ok':'kpi-warn'}" style="font-size:16px;">${sSupp>=0?'-':'+'}$${Math.abs(sSupp).toLocaleString()}</div>${sSuppP!==null?`<div class="kpi-sub">${Math.abs(sSuppP)}% ${sSupp>=0?'below':'above'} supplier</div>`:''}</div>
     <div class="kpi" style="margin:0"><div class="kpi-label">Savings vs Target</div><div class="kpi-value ${sTarget!==null&&sTarget>=0?'kpi-ok':'kpi-warn'}" style="font-size:16px;">${sTarget!==null?(sTarget>=0?'-':'+')+'$'+Math.abs(sTarget).toLocaleString():'—'}</div>${sTargetP!==null?`<div class="kpi-sub">${Math.abs(sTargetP)}% ${sTarget>=0?'below':'above'} target</div>`:''}</div>`;
 }
-
+ 
 async function updateStatusFromSelect(){
   const newStatus=document.getElementById('po-status-select').value;
   if(!currentRFQ||newStatus===currentRFQ.Status)return;
@@ -872,8 +883,15 @@ async function updateStatusFromSelect(){
     document.getElementById('po-timeline').innerHTML=renderTimeline(currentRFQ);
     renderDash();showToast('Status updated: '+newStatus);
   }
+}
+ 
+// Timestamp column map (client-side)
+const STATUS_TS_MAP={
+  'Draft':'Timestamp_Draft','Sent to Carriers':'Timestamp_Sent',
+  'Quotes Received':'Timestamp_Quotes_Received','Awaiting Approval':'Timestamp_Awaiting_Approval',
+  'Awarded':'Timestamp_Awarded','Moved with Supplier':'Timestamp_Moved_Supplier'
 };
-
+ 
 function openEditQuoteDrawer(quoteId){
   const q=quotesForRFQ(currentRFQ.PO_Number).find(x=>String(x.Quote_ID)===String(quoteId));
   if(!q)return;
@@ -888,7 +906,7 @@ function openEditQuoteDrawer(quoteId){
     </div></div>`;
   document.getElementById('rate-drawer').classList.add('open');
 }
-
+ 
 async function saveEditedQuote(quoteId){
   const g=id=>document.getElementById(id)?.value?.trim()||'';
   const result=await apiPost({action:'updateQuote',quoteId,carrierName:g('eq-carrier'),rate:parseFloat(g('eq-rate')),transitDays:parseInt(g('eq-transit')),validUntil:g('eq-valid'),notes:g('eq-notes')});
@@ -898,7 +916,7 @@ async function saveEditedQuote(quoteId){
     closeDrawer();renderCarrierCards();renderRateSummary();showToast('Quote updated');
   }else showToast('Error: '+result.error);
 }
-
+ 
 async function addQuote(){
   const carrier=document.getElementById('aq-carrier').value.trim();
   const rate=parseFloat(document.getElementById('aq-rate').value);
@@ -925,7 +943,7 @@ async function addQuote(){
   }else showToast('Error: '+(result.error||'unknown'));
   btn.textContent='Save quote';btn.disabled=false;
 }
-
+ 
 async function awardCarrier(quoteId,poNumber){
   const rfq=rfqs.find(r=>String(r.PO_Number)===String(poNumber))||currentRFQ;
   const result=await apiPost({action:'awardCarrier',quoteId,rfqId:String(poNumber),originPort:rfq?.Origin_Port||'',destinationPort:rfq?.Destination_Port||'',containerType:rfq?.Container_Type||'',incoterm:rfq?.Incoterm||''});
@@ -944,10 +962,10 @@ async function awardCarrier(quoteId,poNumber){
     showToast('Carrier awarded — rate saved to Rate Library');
   }else showToast('Error: '+(result.error||'unknown'));
 }
-
+ 
 function removeQuote(quoteId){quotes=quotes.filter(q=>String(q.Quote_ID)!==String(quoteId));renderCarrierCards();renderRateSummary();showToast('Quote removed');}
 function clearAddForm(){['aq-carrier','aq-rate','aq-transit','aq-valid','aq-notes'].forEach(id=>document.getElementById(id).value='');}
-
+ 
 // ── RFQ MODAL ──────────────────────────────────────────────────────
 function openEditRFQModal(){
   if(!currentRFQ)return;
@@ -978,7 +996,7 @@ function openEditRFQModal(){
   document.getElementById('nrfq-addl').value=currentRFQ.Additional_Info||'';
   document.getElementById('rfq-modal').classList.remove('hidden');
 }
-
+ 
 function openNewRFQModal(){
   editingRFQ=false;
   document.getElementById('modal-title').textContent='New RFQ';
@@ -991,7 +1009,7 @@ function openNewRFQModal(){
   document.getElementById('rfq-modal').classList.remove('hidden');
 }
 function closeModal(){document.getElementById('rfq-modal').classList.add('hidden');document.getElementById('nrfq-po').disabled=false;}
-
+ 
 async function saveRFQFromModal(){
   const po=document.getElementById('nrfq-po').value.trim();
   const origin=document.getElementById('nrfq-origin').value.trim();
@@ -1030,45 +1048,50 @@ async function saveRFQFromModal(){
   }else{
     const result=await apiPost({action:'saveRFQ',...payload});
     if(result.status==='created'){
-      rfqs.unshift({PO_Number:po,Requestor:payload.requestor,Owner:payload.owner,Ready_Date:payload.readyDate,Origin_Port:origin,Destination_Port:dest,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland,Additional_Info:payload.additionalInfo,Status:'Draft','_PowerAppsId':now,Timestamp_Draft:now});
+      rfqs.unshift({PO_Number:po,Requestor:payload.requestor,Owner:payload.owner,Ready_Date:payload.readyDate,Origin_Port:origin,Destination_Port:dest,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland,Additional_Info:payload.additionalInfo,Status:'Draft','__PowerAppsId__':now,Timestamp_Draft:now});
       closeModal();renderDash();renderRequestsTable();populateReqFilters();showToast('RFQ saved — PO '+po);
     }else showToast('Error: '+(result.error||'unknown'));
   }
   btn.textContent=editingRFQ?'Save changes':'Save RFQ';btn.disabled=false;
 }
-
+ 
 // ── RATE LIBRARY ───────────────────────────────────────────────────
 let rateView='table';
 function setRateView(v){rateView=v;document.getElementById('rate-table-view').classList.toggle('hidden',v!=='table');document.getElementById('rate-lane-view').classList.toggle('hidden',v!=='lane');document.getElementById('view-btn-table').style.background=v==='table'?'var(--bn-faint)':'var(--white)';document.getElementById('view-btn-lane').style.background=v==='lane'?'var(--bn-faint)':'var(--white)';renderRateLibrary();}
-
+ 
 function populateRLFilters(){
-  const origins=[...new Set(rates.map(r=>r.Origin_Port).filter(Boolean))].sort();
-  const dests=[...new Set(rates.map(r=>r.Destination_Port).filter(Boolean))].sort();
-  const carriers=[...new Set(rates.map(r=>r.Carrier_Name).filter(Boolean))].sort();
+  const origins=[...new Set(rates.map(r=>(r.Origin_Port||'').trim()).filter(Boolean))].sort();
+  const dests=[...new Set(rates.map(r=>(r.Destination_Port||'').trim()).filter(Boolean))].sort();
+  const carriers=[...new Set(rates.map(r=>(r.Carrier_Name||'').trim()).filter(Boolean))].sort();
   [['rl-origin',origins],['rl-dest',dests],['rl-carrier',carriers]].forEach(([id,vals])=>{
     const sel=document.getElementById(id);
     while(sel.options.length>1)sel.remove(1);
     vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
   });
 }
-
+ 
 function getRF(){
-  const ft=document.getElementById('rl-type')?.value||'';
-  const fc=document.getElementById('rl-carrier')?.value||'';
-  const fcon=document.getElementById('rl-container')?.value||'';
-  const fo=document.getElementById('rl-origin')?.value||'';
-  const fd=document.getElementById('rl-dest')?.value||'';
-  const fv=document.getElementById('rl-validity')?.value||'';
-  const fs=(document.getElementById('rl-search')?.value||'').toLowerCase();
+  const ft=(document.getElementById('rl-type')?.value||'').trim();
+  const fc=(document.getElementById('rl-carrier')?.value||'').trim();
+  const fcon=(document.getElementById('rl-container')?.value||'').trim();
+  const fo=(document.getElementById('rl-origin')?.value||'').trim();
+  const fd=(document.getElementById('rl-dest')?.value||'').trim();
+  const fv=(document.getElementById('rl-validity')?.value||'').trim();
+  const fs=(document.getElementById('rl-search')?.value||'').toLowerCase().trim();
   return rates.filter(r=>{
     const d=dF(r.Valid_Until);
-    return(!ft||r.Rate_Type===ft)&&(!fc||r.Carrier_Name===fc)&&(!fcon||r.Container_Type===fcon)&&
-      (!fo||r.Origin_Port===fo)&&(!fd||r.Destination_Port===fd)&&
+    const rCarrier=(r.Carrier_Name||'').trim();
+    const rType=(r.Rate_Type||'').trim();
+    const rContainer=(r.Container_Type||'').trim();
+    const rOrigin=(r.Origin_Port||'').trim();
+    const rDest=(r.Destination_Port||'').trim();
+    return(!ft||rType===ft)&&(!fc||rCarrier===fc)&&(!fcon||rContainer===fcon)&&
+      (!fo||rOrigin===fo)&&(!fd||rDest===fd)&&
       (!fv||(fv==='valid'&&d>=0)||(fv==='soon'&&d>=0&&d<=7)||(fv==='expired'&&d<0))&&
-      (!fs||(r.Carrier_Name+r.Origin_Port+r.Destination_Port+r.Container_Type).toLowerCase().includes(fs));
+      (!fs||(rCarrier+rOrigin+rDest+rContainer).toLowerCase().includes(fs));
   });
 }
-
+ 
 function renderRateLibrary(){
   populateRLFilters();
   const data=getRF();
@@ -1082,12 +1105,13 @@ function renderRateLibrary(){
   document.getElementById('rl-loading').classList.add('hidden');
   document.getElementById('rl-table').classList.remove('hidden');
   if(rateView==='table'){
-    // FIX 3: each row passes its own Rate_ID so drawer always shows the right rate
-    document.getElementById('rl-tbody').innerHTML=data.map(r=>{
+    document.getElementById('rl-tbody').innerHTML=data.map((r,idx)=>{
       const d=dF(r.Valid_Until);
       const total=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
-      const rateId=String(r.Rate_ID).replace(/'/g,"\\'");
-      return`<tr class="clickable" onclick="openRateDrawer('${rateId}')">
+      // Use Rate_ID if available, otherwise use index in the filtered data array
+      // Store as data attribute to avoid onclick string escaping issues
+      const rowId=String(r.Rate_ID||'').trim()||'idx-'+rates.indexOf(r);
+      return`<tr class="clickable" data-rateid="${rowId}" onclick="openRateDrawerById(this)">
         <td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td>
         <td>${r.Origin_Port||'?'}</td><td>${r.Destination_Port||'?'}</td>
         <td>${r.Container_Type}</td><td>${r.Incoterm||'—'}</td>
@@ -1109,16 +1133,30 @@ function renderRateLibrary(){
         <div style="display:flex;align-items:center;gap:10px"><span style="font-size:12px;font-weight:500;color:var(--bn-mid)">From $${mr.toLocaleString()}</span>${vi.length===0?'<span class="badge b-urgent">No valid rates</span>':''}</div>
       </div>
       <div><table class="tbl"><thead><tr><th>Carrier</th><th>Incoterm</th><th>Rate</th><th>Transit</th><th>Type</th><th>Valid Until</th><th>Days Left</th></tr></thead>
-      <tbody>${rs.map(r=>{const d2=dF(r.Valid_Until);const t2=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);const rid=String(r.Rate_ID).replace(/'/g,"\\'");
-        return`<tr class="clickable" onclick="openRateDrawer('${rid}')"><td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td><td>${r.Incoterm||'—'}</td><td style="font-weight:500">$${parseFloat(r.Rate||0).toLocaleString()}</td><td>${r.Transit_Days}d</td><td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td><td>${fmtDate(r.Valid_Until)}</td><td><div style="display:flex;align-items:center;gap:7px;">${eBar(d2,t2)}<span class="${eC(d2)}">${eL(d2)}</span></div></td></tr>`;
+      <tbody>${rs.map(r=>{const d2=dF(r.Valid_Until);const t2=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);const rowId=String(r.Rate_ID||'').trim()||'idx-'+rates.indexOf(r);
+        return`<tr class="clickable" data-rateid="${rowId}" onclick="openRateDrawerById(this)"><td style="font-weight:500;color:var(--bn)">${r.Carrier_Name}</td><td>${r.Incoterm||'—'}</td><td style="font-weight:500">$${parseFloat(r.Rate||0).toLocaleString()}</td><td>${r.Transit_Days}d</td><td><span class="badge ${r.Rate_Type==='Spot'?'type-spot':'type-contract'}">${r.Rate_Type}</span></td><td>${fmtDate(r.Valid_Until)}</td><td><div style="display:flex;align-items:center;gap:7px;">${eBar(d2,t2)}<span class="${eC(d2)}">${eL(d2)}</span></div></td></tr>`;
       }).join('')}</tbody></table></div></div>`;}).join('');
   }
 }
-
-// FIX 3: openRateDrawer uses strict string match on Rate_ID
+ 
+// Called from onclick via data attribute — avoids string escaping issues
+function openRateDrawerById(el){
+  const id = el.getAttribute('data-rateid');
+  openRateDrawer(id);
+}
+ 
+// FIX: find rate by Rate_ID string match OR by index fallback (idx-N)
 function openRateDrawer(id){
-  const r=rates.find(x=>String(x.Rate_ID)===String(id));
-  if(!r){console.warn('Rate not found:',id,rates.map(x=>x.Rate_ID));return;}
+  let r;
+  if(String(id).startsWith('idx-')){
+    const idx = parseInt(id.replace('idx-',''));
+    r = rates[idx];
+  } else {
+    r = rates.find(x => String(x.Rate_ID||'').trim() === String(id).trim());
+    // fallback: if not found by ID, try matching by position in filtered data
+    if(!r) r = rates.find(x => String(x.Rate_ID||'').trim() === String(id).trim());
+  }
+  if(!r){console.warn('Rate not found for id:',id);return;}
   const d=dF(r.Valid_Until);
   const total=Math.round((new Date(r.Valid_Until)-new Date(r.Valid_From))/86400000);
   document.getElementById('rd-title').textContent=r.Carrier_Name+' — '+(r.Origin_Port||'?')+' → '+(r.Destination_Port||'?');
@@ -1156,7 +1194,7 @@ function openRateDrawer(id){
     </div>`;
   document.getElementById('rate-drawer').classList.add('open');
 }
-
+ 
 function openAddRateDrawer(){
   document.getElementById('rd-title').textContent='Add Rate';document.getElementById('rd-sub').textContent='Manually enter a carrier rate';
   const fields=[['Carrier Name','nr-carrier','text'],['Origin Port (City, Country)','nr-origin','text'],['Destination Port (City, Country)','nr-dest','text'],['Container Type','nr-container','text'],['Incoterm','nr-incoterm','text'],['Rate (USD)','nr-rate','number'],['Transit (days)','nr-transit','number'],['Valid From (MM/DD/YY)','nr-from','text'],['Valid Until (MM/DD/YY)','nr-until','text'],['Source PO Number','nr-source','text']];
@@ -1170,7 +1208,7 @@ function openAddRateDrawer(){
     </div></div>`;
   document.getElementById('rate-drawer').classList.add('open');
 }
-
+ 
 async function saveNewRate(){
   const g=id=>document.getElementById(id)?.value?.trim()||'';
   const body={action:'saveRate',carrierName:g('nr-carrier'),originPort:g('nr-origin'),destinationPort:g('nr-dest'),containerType:g('nr-container'),incoterm:g('nr-incoterm'),rate:parseFloat(g('nr-rate')),transitDays:parseInt(g('nr-transit')),validFrom:g('nr-from'),validUntil:g('nr-until'),sourceRFQ:g('nr-source'),rateType:document.getElementById('nr-type')?.value||'Spot'};
@@ -1180,10 +1218,10 @@ async function saveNewRate(){
     closeDrawer();renderRateLibrary();renderDash();showToast('Rate saved');
   }else showToast('Error: '+(result.error||'unknown'));
 }
-
+ 
 function closeDrawer(){document.getElementById('rate-drawer').classList.remove('open');}
 function clearRateFilters(){['rl-type','rl-carrier','rl-container','rl-origin','rl-dest','rl-validity'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const s=document.getElementById('rl-search');if(s)s.value='';renderRateLibrary();}
-
+ 
 // ── ANALYTICS ──────────────────────────────────────────────────────
 function getAF(){
   const fs=document.getElementById('a-status')?.value||'';const fc=document.getElementById('a-container')?.value||'';const fd=document.getElementById('a-division')?.value||'';const fq=(document.getElementById('a-search')?.value||'').toLowerCase();
@@ -1213,19 +1251,19 @@ function updateAnalytics(){
     </tr>`).join('');
 }
 function clearAF(){['a-status','a-container','a-division'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});const s=document.getElementById('a-search');if(s)s.value='';updateAnalytics();}
-
+ 
 // ── CARRIER STATS ──────────────────────────────────────────────────
 function renderCarrierStats(){
   document.getElementById('carrier-loading').classList.add('hidden');document.getElementById('carrier-panel').classList.remove('hidden');
   const cm={};quotes.forEach(q=>{if(!cm[q.Carrier_Name])cm[q.Carrier_Name]={quotes:0,awards:0,totalRate:0,totalTransit:0};cm[q.Carrier_Name].quotes++;if(bool(q.Is_Awarded))cm[q.Carrier_Name].awards++;cm[q.Carrier_Name].totalRate+=parseFloat(q.Rate||0);cm[q.Carrier_Name].totalTransit+=parseInt(q.Transit_Days||0);});
   document.getElementById('carrier-tbody').innerHTML=Object.entries(cm).sort((a,b)=>b[1].quotes-a[1].quotes).map(([name,s])=>`<tr><td style="font-weight:500;color:var(--bn)">${name}</td><td>${s.quotes}</td><td>${s.awards}</td><td>${s.quotes?((s.awards/s.quotes)*100).toFixed(0)+'%':'—'}</td><td>$${s.quotes?(s.totalRate/s.quotes).toLocaleString(undefined,{maximumFractionDigits:0}):'—'}</td><td>${s.quotes?Math.round(s.totalTransit/s.quotes):'—'}</td></tr>`).join('');
 }
-
+ 
 // ── EXPORT ─────────────────────────────────────────────────────────
-function exportCSV(){const data=getAF();const h=['PO Number','Owner','Requestor','Origin','Dest','Container','Division','Incoterm','Supplier Rate','Target Rate','Best Rate','Savings vs Supplier','Savings vs Target','Status'];const rows=data.map(q=>[q.PO_Number,q.Owner||'',q.Requestor||'',q.Origin_Port,q.Destination_Port,q.Container_Type,q.Division,q.Incoterm,q.Supplier_Rate,q.Target_Rate,bestR(q.PO_Number)||'',svSupplier(q)||'',svTarget(q)||'',q.Status]);dl([h,...rows],'brothers_quotes.csv');}
+function exportCSV(){const data=getAF();const h=['PO Number','Owner','Requestor','Origin','Dest','Container','Division','Incoterm','Supplier Rate','Target Rate','Best Rate','Savings vs Supplier','Savings vs Target','Status'];const rows=data.map(q=>[q.PO_Number,q.Owner||'',q.Requestor||'',q.Origin_Port,q.Destination_Port,q.Container_Type,q.Division||'',q.Incoterm,q.Supplier_Rate,q.Target_Rate,bestR(q.PO_Number)||'',q.Savings_vs_Supplier||'',q.Savings_vs_Target||'',q.Status]);dl([h,...rows],'brothers_quotes.csv');}
 function exportRatesCSV(){const data=getRF();const h=['Carrier','Origin','Dest','Container','Incoterm','Rate','Transit','Type','Valid From','Valid Until','Days Left','Source PO'];const rows=data.map(r=>[r.Carrier_Name,r.Origin_Port,r.Destination_Port,r.Container_Type,r.Incoterm||'',r.Rate,r.Transit_Days,r.Rate_Type,fmtDate(r.Valid_From),fmtDate(r.Valid_Until),dF(r.Valid_Until),r.Source_RFQ]);dl([h,...rows],'brothers_rate_library.csv');}
 function dl(rows,name){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));a.download=name;a.click();}
-
+ 
 // ── NAV ────────────────────────────────────────────────────────────
 function nav(page){
   ['dashboard','requests','po-detail','rates','analytics','carriers'].forEach(p=>document.getElementById('pg-'+p).classList.toggle('hidden',p!==page));
@@ -1235,7 +1273,7 @@ function nav(page){
   if(page==='carriers')renderCarrierStats();
   if(page!=='rates')closeDrawer();
 }
-
+ 
 // ── INIT ───────────────────────────────────────────────────────────
 async function init(){
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -1246,3 +1284,4 @@ init();
 </script>
 </body>
 </html>
+ 
