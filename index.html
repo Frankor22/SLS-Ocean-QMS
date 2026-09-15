@@ -263,7 +263,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
     <div class="rate-toolbar" id="req-filters">
       <select class="btn" id="filter-status" onchange="renderRequestsTable()"><option value="">All statuses</option><option>Draft</option><option>Sent to Carriers</option><option>Quotes Received</option><option>Awaiting Approval</option><option>Awarded</option><option>Moved with Supplier</option></select>
       <select class="btn" id="filter-container" onchange="renderRequestsTable()"><option value="">All containers</option><option>20ft Dry</option><option>40ft Dry</option><option>40ft HC</option><option>20ft Reefer</option><option>40ft Reefer</option></select>
-      <select class="btn" id="filter-owner" onchange="renderRequestsTable()"><option value="">All owners</option><option>Frank O</option><option>Kyle R</option></select>
+      <select class="btn" id="filter-owner" onchange="renderRequestsTable()"><option value="">All owners</option><option>Frank O</option><option>Chase C</option></select>
       <select class="btn" id="filter-requestor" onchange="renderRequestsTable()"><option value="">All requestors</option></select>
       <select class="btn" id="filter-origin" onchange="renderRequestsTable()"><option value="">All origins</option></select>
       <select class="btn" id="filter-dest" onchange="renderRequestsTable()"><option value="">All destinations</option></select>
@@ -454,7 +454,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
           <div class="modal-field"><label>PO Number *</label><input type="text" id="nrfq-po" placeholder="e.g. PO12346"></div>
           <div class="modal-field"><label>Requestor</label><input type="text" id="nrfq-requestor" placeholder="e.g. Frank O"></div>
           <div class="modal-field"><label>Owner</label>
-            <select id="nrfq-owner"><option value="">— Select owner —</option><option>Frank O</option><option>Kyle R</option></select>
+            <select id="nrfq-owner"><option value="">— Select owner —</option><option>Frank O</option><option>Chase C</option></select>
           </div>
           <div class="modal-field"><label>Ready Date</label><input type="text" id="nrfq-date" placeholder="MM/DD/YY"></div>
           <div class="modal-field"><label>Port of Origin *</label><input type="text" id="nrfq-origin" placeholder="e.g. Santos, Brazil"></div>
@@ -503,7 +503,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 
 <script>
 // ── CONFIG ─────────────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbwWAd--5k9GjWOpZiQ3dgjSxYvksmZHLkqHDs7gA4O0ojp0I2OBV5hIfO0OJtjkRQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyvqeEDBTbiD5DL-9EcIrFFe3mOHO0zVDpnj35as70JhJ4G2858_lUGlOWeNsJAv7s/exec';
 // ──────────────────────────────────────────────────────────────────
 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
@@ -576,15 +576,20 @@ function fmtSv(val,pct){
   return`<span class="${cls}">${val>=0?'-':'+'}$${Math.abs(val).toLocaleString()}${pct!==null?' ('+Math.abs(pct)+'%)':''}</span>`;
 }
 
-// Age — reads __PowerAppsId__ (double underscore) written on creation, falls back to Timestamp_Draft
+// Age — tries __PowerAppsId__ (ISO only, skip GUIDs), then Timestamp_Draft, then Ready_Date
 function age(rfq){
-  const ts = rfq['__PowerAppsId__'] || rfq['Timestamp_Draft'] || '';
+  const isISO = v => v && /^\d{4}-\d{2}-\d{2}T/.test(String(v));
+  const ts = isISO(rfq['__PowerAppsId__']) ? rfq['__PowerAppsId__']
+           : isISO(rfq['Timestamp_Draft'])  ? rfq['Timestamp_Draft']
+           : isISO(rfq['Ready_Date'])       ? rfq['Ready_Date']
+           : '';
   if(!ts) return '—';
   const d = new Date(ts);
   if(isNaN(d.getTime())) return '—';
   const diffMs = Date.now() - d.getTime();
+  if(diffMs < 0) return '—';
   const diffDays = Math.floor(diffMs / 86400000);
-  if(diffDays === 0){ const hrs = Math.floor(diffMs/3600000); return hrs === 0 ? '<1h' : hrs+'h'; }
+  if(diffDays === 0){ const hrs = Math.floor(diffMs/3600000); return hrs===0?'<1h':hrs+'h'; }
   return diffDays + 'd';
 }
 function route(q){return`${q.Origin_Port||'?'} → ${q.Destination_Port||'?'}`;}
@@ -672,7 +677,7 @@ function renderTimeline(rfq){
 // ── DASHBOARD ──────────────────────────────────────────────────────
 function renderDash(){
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const open=rfqs.filter(r=>!DASH_HIDDEN.includes(r.Status));
+  const open=rfqs.filter(r=>!['Awarded','Moved with Supplier'].includes(r.Status));
   const awaiting=rfqs.filter(r=>r.Status==='Sent to Carriers');
   const validRates=rates.filter(r=>dF(r.Valid_Until)>=0);
   const soonRates=rates.filter(r=>{const d=dF(r.Valid_Until);return d!==null&&d>=0&&d<=7;});
@@ -688,7 +693,8 @@ function renderDash(){
   document.getElementById('dash-loading').classList.add('hidden');
 
   // Dashboard search
-  const dashSearch=(document.getElementById('dash-search')?.value||'').toLowerCase().trim();
+  const dashSearchEl = document.getElementById('dash-search');
+  const dashSearch = dashSearchEl ? dashSearchEl.value.toLowerCase().trim() : '';
   const dupes=getDuplicatePOs();
 
   // Buckets — Draft first, then active statuses, exclude Moved with Supplier
@@ -703,7 +709,10 @@ function renderDash(){
   let bucketsHtml='';
   BUCKET_ORDER.forEach(status=>{
     let items=rfqs.filter(r=>r.Status===status);
-    if(dashSearch) items=items.filter(q=>String(q.PO_Number||'').toLowerCase().includes(dashSearch));
+    if(dashSearch) items=items.filter(q=>{
+      const searchStr=(String(q.PO_Number||'')+' '+String(q.Requestor||'')+' '+String(q.Owner||'')).toLowerCase();
+      return searchStr.includes(dashSearch);
+    });
     if(!items.length)return;
     const bucketId='bucket-'+status.replace(/\s+/g,'-');
     bucketsHtml+=`
@@ -984,7 +993,14 @@ async function awardCarrier(quoteId,poNumber){
   }else showToast('Error: '+(result.error||'unknown'));
 }
 
-function removeQuote(quoteId){quotes=quotes.filter(q=>String(q.Quote_ID)!==String(quoteId));renderCarrierCards();renderRateSummary();showToast('Quote removed');}
+async function removeQuote(quoteId){
+  // Delete from Google Sheets first
+  const result = await apiPost({action:'deleteQuote', quoteId: String(quoteId)});
+  if(result.error){ showToast('Error removing quote: '+result.error); return; }
+  // Then remove from local array
+  quotes=quotes.filter(q=>String(q.Quote_ID)!==String(quoteId));
+  renderCarrierCards();renderRateSummary();showToast('Quote removed');
+}
 function clearAddForm(){['aq-carrier','aq-rate','aq-transit','aq-valid','aq-notes'].forEach(id=>document.getElementById(id).value='');}
 
 async function confirmDeleteRFQ(){
