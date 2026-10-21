@@ -452,7 +452,9 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
         <div class="modal-section-title">Shipment details</div>
         <div class="modal-grid">
           <div class="modal-field"><label>PO Number *</label><input type="text" id="nrfq-po" placeholder="e.g. PO12346"></div>
-          <div class="modal-field"><label>Requestor</label><input type="text" id="nrfq-requestor" placeholder="e.g. Frank O"></div>
+          <div class="modal-field"><label>Requestor *</label>
+            <select id="nrfq-requestor"><option value="">— Select requestor —</option></select>
+          </div>
           <div class="modal-field"><label>Owner</label>
             <select id="nrfq-owner"><option value="">— Select owner —</option><option>Frank O</option><option>Chase C</option></select>
           </div>
@@ -470,7 +472,7 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
           <div class="modal-field"><label>Division</label><input type="text" id="nrfq-division" placeholder="e.g. Brothers Ingredients"></div>
           <div class="modal-field"><label>Supplier Rate (USD)</label><input type="number" id="nrfq-supplier-rate" placeholder="e.g. 3500"></div>
           <div class="modal-field"><label>Target / Sold Rate (USD)</label><input type="number" id="nrfq-target-rate" placeholder="e.g. 3200"></div>
-          <div class="modal-field"><label>Initial Status</label>
+          <div class="modal-field"><label id="nrfq-status-label">Initial Status</label>
             <select id="nrfq-status"><option value="Draft">Draft</option><option value="Sent to Carriers">Sent to Carriers</option><option value="Quotes Received">Quotes Received</option><option value="Awaiting Approval">Awaiting Approval</option><option value="Awarded">Awarded</option><option value="Moved with Supplier">Moved with Supplier</option></select>
           </div>
         </div>
@@ -503,11 +505,20 @@ body{font-family:var(--font);background:var(--surf);color:var(--bt);font-size:13
 
 <script>
 // ── CONFIG ─────────────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbyvqeEDBTbiD5DL-9EcIrFFe3mOHO0zVDpnj35as70JhJ4G2858_lUGlOWeNsJAv7s/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzIabd1OOxA7JZYyPOOqxQDS-mEFh_Bq9fgFF6PS9gtJzdpuu5QJj1_rERRcOOPShg/exec';
 // ──────────────────────────────────────────────────────────────────
 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 let rfqs=[], quotes=[], rates=[], currentRFQ=null, editingRFQ=false;
+
+// Requestor dropdown — loaded from the "Users" sheet; this list is only a fallback
+const DEFAULT_REQUESTORS = [
+  'Stephanie Ayala','Marisa Coleman','Sean Read','Nicole Bruce','Yvette Blew',
+  'Alexander Carpenter','Andrew Knox','Ashley DeJuan','Rebecca Sutton','Manuel Mendez',
+  'Amy Burdette','Juan Suarez','Lesther Duarte','Nathan Baker','Janice Wong',
+  'Yahaira Henriquez','Jaime Gatenio','Luis Rodriguez','Marwa Rayes'
+];
+let users=[...DEFAULT_REQUESTORS];
 
 // All statuses in order
 const ALL_STATUSES = ['Draft','Sent to Carriers','Quotes Received','Awaiting Approval','Awarded','Moved with Supplier'];
@@ -526,7 +537,13 @@ async function apiPost(body){
   catch(e){console.error('POST failed:',e);return{error:e.message};}
 }
 async function loadAll(){
-  try{[rfqs,rates]=await Promise.all([apiGet('getRFQs'),apiGet('getRates')]);return true;}
+  try{
+    const [r,ra,u]=await Promise.all([apiGet('getRFQs'),apiGet('getRates'),apiGet('getUsers')]);
+    rfqs=r;rates=ra;
+    const names=Array.isArray(u)?u.map(x=>String(x.Name||'').trim()).filter(Boolean):[];
+    users=names.length?names:[...DEFAULT_REQUESTORS];
+    return true;
+  }
   catch(e){console.error(e);return false;}
 }
 async function refreshAll(){
@@ -601,6 +618,19 @@ function toggleBucket(id){
   const collapsed=el.style.display==='none';
   el.style.display=collapsed?'':'none';
   if(icon)icon.textContent=collapsed?'▲':'▼';
+}
+
+// Requestor dropdown — fills options and keeps any legacy value not in the list
+function populateRequestorSelect(current){
+  const sel=document.getElementById('nrfq-requestor');
+  const cur=String(current||'').trim();
+  const names=[...new Set(users)].sort((a,b)=>a.localeCompare(b));
+  const match=names.find(n=>n.toLowerCase()===cur.toLowerCase());
+  sel.innerHTML='';
+  const blank=document.createElement('option');blank.value='';blank.textContent='— Select requestor —';sel.appendChild(blank);
+  names.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);});
+  if(cur&&!match){const o=document.createElement('option');o.value=cur;o.textContent=cur+' (not in Users list)';sel.appendChild(o);}
+  sel.value=match||cur||'';
 }
 
 // Duplicate detection: flag RFQs sharing same PO + origin + destination
@@ -1028,10 +1058,11 @@ function openEditRFQModal(){
   editingRFQ=true;
   document.getElementById('modal-title').textContent='Edit RFQ — '+currentRFQ.PO_Number;
   document.getElementById('save-rfq-btn').textContent='Save changes';
+  document.getElementById('nrfq-status-label').textContent='Status';
   document.getElementById('nrfq-po').value=currentRFQ.PO_Number||'';
   document.getElementById('nrfq-po').disabled=false; // PO is now editable
   document.getElementById('nrfq-po').dataset.oldPo=currentRFQ.PO_Number; // store old value
-  document.getElementById('nrfq-requestor').value=currentRFQ.Requestor||'';
+  populateRequestorSelect(currentRFQ.Requestor||'');
   document.getElementById('nrfq-owner').value=currentRFQ.Owner||'';
   document.getElementById('nrfq-date').value=fmtDate(currentRFQ.Ready_Date)||'';
   document.getElementById('nrfq-origin').value=currentRFQ.Origin_Port||'';
@@ -1059,8 +1090,10 @@ function openNewRFQModal(){
   editingRFQ=false;
   document.getElementById('modal-title').textContent='New RFQ';
   document.getElementById('save-rfq-btn').textContent='Save RFQ';
+  document.getElementById('nrfq-status-label').textContent='Initial Status';
   document.getElementById('nrfq-po').disabled=false;
-  ['nrfq-po','nrfq-requestor','nrfq-date','nrfq-origin','nrfq-dest','nrfq-division','nrfq-transit','nrfq-supplier-rate','nrfq-target-rate','nrfq-addl'].forEach(id=>document.getElementById(id).value='');
+  ['nrfq-po','nrfq-date','nrfq-origin','nrfq-dest','nrfq-division','nrfq-transit','nrfq-supplier-rate','nrfq-target-rate','nrfq-addl'].forEach(id=>document.getElementById(id).value='');
+  populateRequestorSelect('');
   document.getElementById('nrfq-qty').value=1;
   document.getElementById('nrfq-owner').value='';
   document.getElementById('nrfq-status').value='Draft';
@@ -1071,13 +1104,14 @@ function closeModal(){document.getElementById('rfq-modal').classList.add('hidden
 
 async function saveRFQFromModal(){
   const po=document.getElementById('nrfq-po').value.trim();
+  const requestor=document.getElementById('nrfq-requestor').value.trim();
   const origin=document.getElementById('nrfq-origin').value.trim();
   const dest=document.getElementById('nrfq-dest').value.trim();
-  if(!po||!origin||!dest){showToast('PO Number, Origin, and Destination are required.');return;}
+  if(!po||!requestor||!origin||!dest){showToast('PO Number, Requestor, Origin, and Destination are required.');return;}
   const btn=document.getElementById('save-rfq-btn');btn.textContent='Saving...';btn.disabled=true;
   const now=new Date().toISOString();
   const payload={
-    poNumber:po,requestor:document.getElementById('nrfq-requestor').value.trim(),
+    poNumber:po,requestor:requestor,
     owner:document.getElementById('nrfq-owner').value,
     readyDate:document.getElementById('nrfq-date').value.trim(),
     originPort:origin,destinationPort:dest,
@@ -1101,6 +1135,7 @@ async function saveRFQFromModal(){
   };
   if(editingRFQ){
     const oldPo=document.getElementById('nrfq-po').dataset.oldPo||po;
+    const prevStatus=currentRFQ.Status;
     const result=await apiPost({action:'updateRFQ',...payload,oldPoNumber:oldPo});
     if(!result.error){
       // If PO was renamed, update local rfqs array
@@ -1112,7 +1147,18 @@ async function saveRFQFromModal(){
         if(currentRFQ)currentRFQ.PO_Number=po;
       }
       Object.assign(currentRFQ,{PO_Number:po,Requestor:payload.requestor,Owner:payload.owner,Ready_Date:payload.readyDate,Origin_Port:payload.originPort,Destination_Port:payload.destinationPort,Container_Type:payload.containerType,Quantity:payload.quantity,Transit_Days:payload.transitDays,Incoterm:payload.incoterm,Division:payload.division,Supplier_Rate:payload.supplierRate,Target_Rate:payload.targetRate,Additional_Info:payload.additionalInfo,Cond_Urgent:payload.condUrgent,Cond_Priority_Transit:payload.condPriorityTransit,Cond_Priority_Cost:payload.condPriorityCost,Cond_Direct_Sailing:payload.condDirectSailing,Cond_Transshipping:payload.condTransshipping,Cond_Genset:payload.condGenset,Cond_Origin_Inland:payload.condOriginInland});
-      closeModal();renderPOInfo();renderDash();renderRequestsTable();showToast('RFQ updated'+(oldPo!==po?' — PO renamed to '+po:''));
+      // Status change from the Edit modal
+      if(payload.status!==prevStatus){
+        const tsKey=STATUS_TS_MAP[payload.status];
+        currentRFQ.Status=payload.status;
+        if(tsKey)currentRFQ[tsKey]=new Date().toISOString();
+      }
+      document.getElementById('po-title').textContent=currentRFQ.PO_Number;
+      document.getElementById('po-sub').textContent=route(currentRFQ)+' · '+currentRFQ.Container_Type+(currentRFQ.Owner?' · '+currentRFQ.Owner:'');
+      document.getElementById('po-status-badge').innerHTML=`<span class="badge ${sbm[currentRFQ.Status]||'b-draft'}">${currentRFQ.Status}</span>`;
+      document.getElementById('po-status-select').value=currentRFQ.Status||'Draft';
+      document.getElementById('po-timeline').innerHTML=renderTimeline(currentRFQ);
+      closeModal();renderPOInfo();renderDash();renderRequestsTable();populateReqFilters();showToast('RFQ updated'+(oldPo!==po?' — PO renamed to '+po:''));
     }else showToast('Error: '+result.error);
   }else{
     const chosenStatus=payload.status;
